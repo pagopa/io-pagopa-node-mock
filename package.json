@@ -61,7 +61,6 @@
       "tsx"
     ],
     "preset": "ts-jest",
-    "testTimeout": 100000,
     "testMatch": null
   }
 }
