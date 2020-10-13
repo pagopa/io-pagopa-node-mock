@@ -104,7 +104,7 @@ describe("index#nodoAttivaRPT", () => {
         IWithinRangeStringTag<8, 16>
     });
     expect(response).toEqual({
-      risposta: {
+      nodoAttivaRPTRisposta: {
         esito: "KO",
         fault: {
           faultCode: "401",
@@ -123,7 +123,7 @@ describe("index#nodoAttivaRPT", () => {
     const pagoPAClient = await getPagopaClient();
     const response = await pagoPAClient.nodoAttivaRPT(mockedNodoAttivaRequest);
     expect(response).toEqual({
-      risposta: {
+      nodoAttivaRPTRisposta: {
         datiPagamentoPA: {
           causaleVersamento: "Causale versamento mock",
           ibanAccredito: "IT47L0300203280645139156879",
@@ -158,7 +158,7 @@ describe("index#nodoVerificaRPT", () => {
         IWithinRangeStringTag<8, 16>
     });
     expect(response).toEqual({
-      risposta: {
+      nodoVerificaRPTRisposta: {
         esito: "KO",
         fault: {
           faultCode: "401",
@@ -172,7 +172,7 @@ describe("index#nodoVerificaRPT", () => {
     const pagoPAClient = await getPagopaClient();
     const response = await pagoPAClient.nodoVerificaRPT(mockedNodoVerificaRPT);
     expect(response).toEqual({
-      risposta: {
+      nodoVerificaRPTRisposta: {
         datiPagamentoPA: {
           causaleVersamento: "Causale versamento mock",
           ibanAccredito: "IT47L0300203280645139156879",

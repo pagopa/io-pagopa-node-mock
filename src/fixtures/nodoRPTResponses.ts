@@ -17,7 +17,7 @@ export const NodoAttivaRPT = (params: INodoRPTRequest): MockResponse => [
         xmlns:xsd="http://www.w3.org/2001/XMLSchema"
         xmlns:ppt="http://ws.pagamenti.telematici.gov/">
   <nodoAttivaRPTRisposta>
-    <ppt:risposta>
+    <ppt:nodoAttivaRPTRisposta>
       <esito>${params.esito}</esito>
       ${
         params.datiPagamento
@@ -40,7 +40,7 @@ export const NodoAttivaRPT = (params: INodoRPTRequest): MockResponse => [
       </fault>`
           : ""
       }
-    </ppt:risposta>
+    </ppt:nodoAttivaRPTRisposta>
   </nodoAttivaRPTRisposta>
 </s:Body>
 </s:Envelope>`
@@ -54,7 +54,7 @@ export const NodoVerificaRPT = (params: INodoRPTRequest): MockResponse => [
         xmlns:xsd="http://www.w3.org/2001/XMLSchema"
         xmlns:ppt="http://ws.pagamenti.telematici.gov/">
   <nodoVerificaRPTRisposta>
-    <ppt:risposta>
+    <ppt:nodoVerificaRPTRisposta>
       <esito>${params.esito}</esito>
       ${
         params.datiPagamento
@@ -77,7 +77,7 @@ export const NodoVerificaRPT = (params: INodoRPTRequest): MockResponse => [
       </fault>`
           : ""
       }
-    </ppt:risposta>
+    </ppt:nodoVerificaRPTRisposta>
   </nodoVerificaRPTRisposta>
 </s:Body>
 </s:Envelope>`
