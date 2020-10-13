@@ -20,8 +20,10 @@ export async function newExpressApp(
   app.use(express.urlencoded());
   app.use(bodyParserXml({}));
 
+  // SOAP Server mock entrypoint
   app.post("/*", async (req, res) => {
     const soapRequest = req.body["soap:envelope"]["soap:body"][0];
+    // The SOAP request is a NodoAttivaRPT request
     if (soapRequest["ppt:nodoattivarpt"]) {
       const nodoAttivaRPT = soapRequest["ppt:nodoattivarpt"][0];
       const password = nodoAttivaRPT.password[0];
@@ -45,6 +47,7 @@ export async function newExpressApp(
         datiPagamento: { importoSingoloVersamento },
         esito: "OK"
       });
+      // Async call to PagoPa Proxy FespCd SOAP service
       setTimeout(async () => {
         const pagoPaProxyClient = new FespCdClient.FespCdClientAsync(
           await FespCdClient.createFespCdClient({
@@ -79,6 +82,7 @@ export async function newExpressApp(
         .status(nodoAttivaSuccessResponse[0])
         .send(nodoAttivaSuccessResponse[1]);
     }
+    // The SOAP request is a NodoVerificaRPT request
     if (soapRequest["ppt:nodoverificarpt"]) {
       const nodoVerificaRPT = soapRequest["ppt:nodoverificarpt"][0];
       const password = nodoVerificaRPT.password[0];
@@ -104,6 +108,7 @@ export async function newExpressApp(
         .status(nodoVerificaSuccessResponse[0])
         .send(nodoVerificaSuccessResponse[1]);
     }
+    // The SOAP Request not implemented
     res.status(404).send("Not found");
   });
   return app;
