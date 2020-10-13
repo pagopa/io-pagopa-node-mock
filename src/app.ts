@@ -3,7 +3,7 @@ import * as bodyParserXml from "express-xml-bodyparser";
 import { IWithinRangeStringTag } from "italia-ts-commons/lib/strings";
 import * as morgan from "morgan";
 import { CONFIG, Configuration } from "./config";
-import { NodoAttivaRPT } from "./fixtures/attiva";
+import { NodoAttivaRPT, NodoVerificaRPT } from "./fixtures/attiva";
 import * as FespCdClient from "./services/pagopa_api/FespCdClient";
 import { logger } from "./utils/logger";
 
@@ -78,6 +78,23 @@ export async function newExpressApp(
       return res
         .status(nodoAttivaSuccessResponse[0])
         .send(nodoAttivaSuccessResponse[1]);
+    }
+    if (soapRequest["ppt:nodoverificarpt"]) {
+      const nodoVerificaRPT = soapRequest["ppt:nodoverificarpt"][0];
+      const password = nodoVerificaRPT.password[0];
+      if (password !== config.PAGOPA_PROXY.PASSWORD) {
+        const nodoVerificaErrorResponse = NodoVerificaRPT({
+          esito: "KO",
+          fault: {
+            faultCode: "401",
+            faultString: "Invalid password",
+            id: "0"
+          }
+        });
+        return res
+          .status(nodoVerificaErrorResponse[0])
+          .send(nodoVerificaErrorResponse[1]);
+      }
     }
     res.status(404).send("Not found");
   });
