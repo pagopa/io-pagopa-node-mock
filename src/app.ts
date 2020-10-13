@@ -1,7 +1,10 @@
 import * as express from "express";
+import * as bodyParserXml from "express-xml-bodyparser";
+import { IWithinRangeStringTag } from "italia-ts-commons/lib/strings";
 import * as morgan from "morgan";
-import { Configuration } from "./config";
-import * as PagamentiTelematiciPspNodoServer from "./services/pagopa_api/PagamentiTelematiciPspNodo";
+import { CONFIG, Configuration } from "./config";
+import { NodoAttivaRPT } from "./fixtures/attiva";
+import * as FespCdClient from "./services/pagopa_api/FespCdClient";
 import { logger } from "./utils/logger";
 
 export async function newExpressApp(
@@ -13,17 +16,70 @@ export async function newExpressApp(
     ":date[iso] [info]: :method :url :status - :response-time ms";
   app.use(morgan(loggerFormat));
 
-  const soapServer = await PagamentiTelematiciPspNodoServer.attachPagamentiTelematiciPspNodoServer(
-    app,
-    config.NODO_MOCK.ROUTES.PPT_NODO,
-    PagamentiTelematiciPspNodoServer.PagamentiTelematiciPspNodoServiceHandler(
-      config.PAGOPA_PROXY
-    )
-  );
-  // tslint:disable-next-line: no-object-mutation
-  soapServer.log = (type, data) => {
-    logger.debug("SOAP TYPE: %s", type);
-    logger.debug("SOAP DATA: %s", data);
-  };
+  app.use(express.json());
+  app.use(express.urlencoded());
+  app.use(bodyParserXml({}));
+
+  app.post("/*", async (req, res) => {
+    const soapRequest = req.body["soap:envelope"]["soap:body"][0];
+    if (soapRequest["ppt:nodoattivarpt"]) {
+      const nodoAttivaRPT = soapRequest["ppt:nodoattivarpt"][0];
+      const password = nodoAttivaRPT.password[0];
+      if (password !== config.PAGOPA_PROXY.PASSWORD) {
+        const nodoAttivaErrorResponse = NodoAttivaRPT({
+          esito: "KO",
+          fault: {
+            faultCode: "401",
+            faultString: "Invalid password",
+            id: "0"
+          }
+        });
+        return res
+          .status(nodoAttivaErrorResponse[0])
+          .send(nodoAttivaErrorResponse[1]);
+      }
+      const importoSingoloVersamento =
+        nodoAttivaRPT.datipagamentopsp[0].importosingoloversamento[0];
+      const codiceContestoPagamento = nodoAttivaRPT.codicecontestopagamento[0];
+      const nodoAttivaSuccessResponse = NodoAttivaRPT({
+        datiPagamento: { importoSingoloVersamento },
+        esito: "OK"
+      });
+      setTimeout(async () => {
+        const pagoPaProxyClient = new FespCdClient.FespCdClientAsync(
+          await FespCdClient.createFespCdClient({
+            endpoint: `${CONFIG.PAGOPA_PROXY.HOST}:${CONFIG.PAGOPA_PROXY.PORT}${CONFIG.PAGOPA_PROXY.WS_SERVICES.FESP_CD}`,
+            wsdl_options: {
+              timeout: 1000
+            }
+          })
+        );
+        try {
+          await pagoPaProxyClient.cdInfoWisp({
+            codiceContestoPagamento,
+            // Fake paymentId
+            idPagamento: Math.random()
+              .toString(36)
+              .slice(2)
+              .toUpperCase(), // TODO: Check required format
+            identificativoDominio: "1" as (string &
+              IWithinRangeStringTag<1, 36>),
+            identificativoUnivocoVersamento:
+              // Fake paymentId
+              Math.random()
+                .toString(36)
+                .slice(2)
+                .toUpperCase() as (string & IWithinRangeStringTag<1, 36>) // TODO: check required format
+          });
+        } catch (err) {
+          logger.error(err);
+        }
+      }, 1000);
+      return res
+        .status(nodoAttivaSuccessResponse[0])
+        .send(nodoAttivaSuccessResponse[1]);
+    }
+    res.status(404).send("Not found");
+  });
   return app;
 }

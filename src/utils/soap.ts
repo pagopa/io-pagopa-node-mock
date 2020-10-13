@@ -7,11 +7,13 @@ import * as soap from "soap";
 export type SoapMethodCB<I, O> = (
   input: I,
   cb: (
+    // tslint:disable-next-line: no-any
     err: any,
     result: O,
     raw: string,
+    // tslint:disable-next-line: no-any
     soapHeader: { readonly [k: string]: any }
-  ) => any,
+  ) => unknown,
   options?: Pick<soap.ISecurity, "postProcess">
 ) => void;
 
