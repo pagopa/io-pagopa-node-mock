@@ -168,6 +168,20 @@ describe("index#nodoVerificaRPT", () => {
       }
     });
   });
+  it("nodoVerificaRPT should returns a valid success response", async () => {
+    const pagoPAClient = await getPagopaClient();
+    const response = await pagoPAClient.nodoVerificaRPT(mockedNodoVerificaRPT);
+    expect(response).toEqual({
+      risposta: {
+        datiPagamentoPA: {
+          causaleVersamento: "Causale versamento mock",
+          ibanAccredito: "IT47L0300203280645139156879",
+          importoSingoloVersamento: anImportoSingoloVersamento.toFixed(2)
+        },
+        esito: "OK"
+      }
+    });
+  });
 });
 describe("Test SOAP Server", () => {
   it("cdInfoWisp should returns a success response", async () => {

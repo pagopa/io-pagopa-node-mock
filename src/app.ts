@@ -3,7 +3,7 @@ import * as bodyParserXml from "express-xml-bodyparser";
 import { IWithinRangeStringTag } from "italia-ts-commons/lib/strings";
 import * as morgan from "morgan";
 import { CONFIG, Configuration } from "./config";
-import { NodoAttivaRPT, NodoVerificaRPT } from "./fixtures/attiva";
+import { NodoAttivaRPT, NodoVerificaRPT } from "./fixtures/nodoRPTResponses";
 import * as FespCdClient from "./services/pagopa_api/FespCdClient";
 import { logger } from "./utils/logger";
 
@@ -95,6 +95,14 @@ export async function newExpressApp(
           .status(nodoVerificaErrorResponse[0])
           .send(nodoVerificaErrorResponse[1]);
       }
+      const importoSingoloVersamento = "1.00";
+      const nodoVerificaSuccessResponse = NodoVerificaRPT({
+        datiPagamento: { importoSingoloVersamento },
+        esito: "OK"
+      });
+      return res
+        .status(nodoVerificaSuccessResponse[0])
+        .send(nodoVerificaSuccessResponse[1]);
     }
     res.status(404).send("Not found");
   });
