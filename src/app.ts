@@ -21,7 +21,7 @@ export async function newExpressApp(
   app.use(bodyParserXml({}));
 
   // SOAP Server mock entrypoint
-  app.post("/*", async (req, res) => {
+  app.post(config.NODO_MOCK.ROUTES.PPT_NODO, async (req, res) => {
     const soapRequest = req.body["soap:envelope"]["soap:body"][0];
     // The SOAP request is a NodoAttivaRPT request
     if (soapRequest["ppt:nodoattivarpt"]) {
