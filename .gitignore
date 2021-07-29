@@ -5,3 +5,5 @@ yarn-error.log
 coverage
 .vscode
 src/generated
+.DS_Store
+
