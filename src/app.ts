@@ -5,7 +5,10 @@ import * as morgan from "morgan";
 import { CONFIG, Configuration } from "./config";
 import { NodoAttivaRPT, NodoVerificaRPT } from "./fixtures/nodoRPTResponses";
 import * as FespCdClient from "./services/pagopa_api/FespCdClient";
+import { PPT_MULTI_BENEFICIARIO } from "./utils/helper";
 import { logger } from "./utils/logger";
+
+const avvisoMultiBeneficiario = new RegExp("^30200.*");
 
 export async function newExpressApp(
   config: Configuration
@@ -85,6 +88,9 @@ export async function newExpressApp(
     // The SOAP request is a NodoVerificaRPT request
     if (soapRequest["ppt:nodoverificarpt"]) {
       const nodoVerificaRPT = soapRequest["ppt:nodoverificarpt"][0];
+      const iuv =
+        nodoVerificaRPT.codiceidrpt[0]["qrc:qrcode"][0]["qrc:codiuv"][0];
+      const isIuvMultiBeneficiario = avvisoMultiBeneficiario.test(iuv);
       const password = nodoVerificaRPT.password[0];
       if (password !== config.PAGOPA_PROXY.PASSWORD) {
         const nodoVerificaErrorResponse = NodoVerificaRPT({
@@ -92,6 +98,19 @@ export async function newExpressApp(
           fault: {
             faultCode: "401",
             faultString: "Invalid password",
+            id: "0"
+          }
+        });
+        return res
+          .status(nodoVerificaErrorResponse[0])
+          .send(nodoVerificaErrorResponse[1]);
+      }
+      if (isIuvMultiBeneficiario) {
+        const nodoVerificaErrorResponse = NodoVerificaRPT({
+          esito: "KO",
+          fault: {
+            faultCode: PPT_MULTI_BENEFICIARIO.value,
+            faultString: "Avviso Multi Beneficiario",
             id: "0"
           }
         });
