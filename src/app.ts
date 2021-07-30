@@ -3,7 +3,11 @@ import * as bodyParserXml from "express-xml-bodyparser";
 import { IWithinRangeStringTag } from "italia-ts-commons/lib/strings";
 import * as morgan from "morgan";
 import { CONFIG, Configuration } from "./config";
-import { NodoAttivaRPT, NodoVerificaRPT } from "./fixtures/nodoRPTResponses";
+import {
+  NodoAttivaRPT,
+  NodoVerificaRPT,
+  VerifyPaymentNoticeResponse
+} from "./fixtures/nodoRPTResponses";
 import * as FespCdClient from "./services/pagopa_api/FespCdClient";
 import { PPT_MULTI_BENEFICIARIO } from "./utils/helper";
 import { logger } from "./utils/logger";
@@ -126,6 +130,17 @@ export async function newExpressApp(
       return res
         .status(nodoVerificaSuccessResponse[0])
         .send(nodoVerificaSuccessResponse[1]);
+    }
+    // The SOAP request is a verifyPaymentNotice request
+    if (soapRequest["nfpsp:verifypaymentnoticereq"]) {
+      const amountNotice = "2.00";
+      const verifyPaymentNoticeRes = VerifyPaymentNoticeResponse({
+        amount: +amountNotice,
+        outcome: "OK"
+      });
+      return res
+        .status(verifyPaymentNoticeRes[0])
+        .send(verifyPaymentNoticeRes[1]);
     }
     // The SOAP Request not implemented
     res.status(404).send("Not found");
