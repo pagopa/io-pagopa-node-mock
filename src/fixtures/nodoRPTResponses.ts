@@ -17,6 +17,11 @@ interface IVerifyPaymentNoticeReq {
   amount?: stAmount_type_nfpsp;
 }
 
+interface IActivateIOPaymentReq {
+  outcome: "OK" | "KO";
+  fault?: ctFaultBean_type_nfpsp;
+  amount?: stAmount_type_nfpsp;
+}
 export const NodoAttivaRPT = (params: INodoRPTRequest): MockResponse => [
   200,
   `<?xml version="1.0" encoding="UTF-8"?>
@@ -111,6 +116,7 @@ export const VerifyPaymentNoticeResponse = (
           <options>EQ</options>
           <paymentNote>test</paymentNote>
         </paymentOptionDescription>
+        <paymentOptionDescription/>
       </paymentList>
       <paymentDescription>Pagamento di Test</paymentDescription>
       <fiscalCodePA>12345678901</fiscalCodePA>
@@ -130,6 +136,28 @@ export const VerifyPaymentNoticeResponse = (
           : ""
       }
     </nfpsp:verifyPaymentNoticeRes>
+  </s:Body>
+</s:Envelope> `
+];
+
+export const activateIOPaymenResponse = (
+  params: IActivateIOPaymentReq
+): MockResponse => [
+  200,
+  `<s:Envelope xmlns:tns="http://pagopa-api.pagopa.gov.it/node/nodeForPsp.wsdl" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xmlns:nfpsp="http://pagopa-api.pagopa.gov.it/node/nodeForPsp.xsd" 
+  xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+  <s:Body>
+    <nfpsp:activateIOPaymentRes>
+      <outcome>${params.outcome}</outcome>
+      <totalAmount>30.00</totalAmount>
+      <paymentDescription>test</paymentDescription>
+      <fiscalCodePA>77777777777</fiscalCodePA>
+      <companyName>company EC</companyName>
+      <officeName>office EC</officeName>
+      <paymentToken>c110729d258c4ab1b765fe902aae41d6</paymentToken>
+    </nfpsp:activateIOPaymentRes>
   </s:Body>
 </s:Envelope> `
 ];
