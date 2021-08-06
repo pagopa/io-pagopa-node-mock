@@ -4,6 +4,7 @@ import { IWithinRangeStringTag } from "italia-ts-commons/lib/strings";
 import * as morgan from "morgan";
 import { CONFIG, Configuration } from "./config";
 import {
+  activateIOPaymenResponse,
   NodoAttivaRPT,
   NodoVerificaRPT,
   VerifyPaymentNoticeResponse
@@ -12,7 +13,7 @@ import * as FespCdClient from "./services/pagopa_api/FespCdClient";
 import { PPT_MULTI_BENEFICIARIO } from "./utils/helper";
 import { logger } from "./utils/logger";
 
-const avvisoMultiBeneficiario = new RegExp("^30200.*");
+const avvisoMultiBeneficiario = new RegExp("^.*30200.*");
 
 export async function newExpressApp(
   config: Configuration
@@ -30,10 +31,12 @@ export async function newExpressApp(
   // SOAP Server mock entrypoint
   app.post(config.NODO_MOCK.ROUTES.PPT_NODO, async (req, res) => {
     const soapRequest = req.body["soap:envelope"]["soap:body"][0];
+    
     // The SOAP request is a NodoAttivaRPT request
     if (soapRequest["ppt:nodoattivarpt"]) {
       const nodoAttivaRPT = soapRequest["ppt:nodoattivarpt"][0];
       const password = nodoAttivaRPT.password[0];
+
       if (password !== config.PAGOPA_PROXY.PASSWORD) {
         const nodoAttivaErrorResponse = NodoAttivaRPT({
           esito: "KO",
@@ -46,6 +49,24 @@ export async function newExpressApp(
         return res
           .status(nodoAttivaErrorResponse[0])
           .send(nodoAttivaErrorResponse[1]);
+      }
+
+    const iuv = nodoAttivaRPT.codiceidrpt[0]["qrc:qrcode"][0]["qrc:codiuv"][0];
+    const isIuvMultiBeneficiario = avvisoMultiBeneficiario.test(iuv);
+
+    if (isIuvMultiBeneficiario) {
+        const nodoAttivaErrorResponse = NodoAttivaRPT({
+          esito: "KO",
+          fault: {
+            faultCode: PPT_MULTI_BENEFICIARIO.value,
+            faultString: "Avviso Multi Beneficiario",
+            id: "0"
+          }
+     
+        });
+        return res
+        .status(nodoAttivaErrorResponse[0])
+        .send(nodoAttivaErrorResponse[1]);
       }
       const importoSingoloVersamento =
         nodoAttivaRPT.datipagamentopsp[0].importosingoloversamento[0];
@@ -142,6 +163,18 @@ export async function newExpressApp(
         .status(verifyPaymentNoticeRes[0])
         .send(verifyPaymentNoticeRes[1]);
     }
+    // The SOAP request is a verifyPaymentNotice request
+    if (soapRequest["nfpsp:activateiopaymentreq"]) {
+        const amountNotice = "2.00";
+        const activateIOPaymenRes = 
+        activateIOPaymenResponse({
+          amount: +amountNotice,
+          outcome: "OK"
+        });
+        return res
+          .status(activateIOPaymenRes[0])
+          .send(activateIOPaymenRes[1]);
+      }
     // The SOAP Request not implemented
     res.status(404).send("Not found");
   });
