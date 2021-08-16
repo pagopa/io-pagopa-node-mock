@@ -53,6 +53,7 @@ export async function newExpressApp(
 
     const iuv = nodoAttivaRPT.codiceidrpt[0]["qrc:qrcode"][0]["qrc:codiuv"][0];
     const isIuvMultiBeneficiario = avvisoMultiBeneficiario.test(iuv);
+    logger.info(`nodoattivarpt IUV ${iuv}`)
 
     if (isIuvMultiBeneficiario) {
         const nodoAttivaErrorResponse = NodoAttivaRPT({
@@ -115,6 +116,7 @@ export async function newExpressApp(
       const nodoVerificaRPT = soapRequest["ppt:nodoverificarpt"][0];
       const iuv =
         nodoVerificaRPT.codiceidrpt[0]["qrc:qrcode"][0]["qrc:codiuv"][0];
+      logger.info(`nodoverificarpt IUV ${iuv}`)
       const isIuvMultiBeneficiario = avvisoMultiBeneficiario.test(iuv);
       const password = nodoVerificaRPT.password[0];
       if (password !== config.PAGOPA_PROXY.PASSWORD) {
@@ -152,7 +154,7 @@ export async function newExpressApp(
         .status(nodoVerificaSuccessResponse[0])
         .send(nodoVerificaSuccessResponse[1]);
     }
-    // The SOAP request is a verifyPaymentNotice request
+    // The SOAP request is a verifypaymentnoticereq request
     if (soapRequest["nfpsp:verifypaymentnoticereq"]) {
       const amountNotice = "2.00";
       const verifyPaymentNoticeRes = VerifyPaymentNoticeResponse({
@@ -163,7 +165,12 @@ export async function newExpressApp(
         .status(verifyPaymentNoticeRes[0])
         .send(verifyPaymentNoticeRes[1]);
     }
-    // The SOAP request is a verifyPaymentNotice request
+    // The SOAP request is a activateiopaymentreq request
+    // NOTE : activateIOPayment is a special request of the canonical activatePaymentNotice made available by NODO for the PSPs.
+    //        It's only used by the appIO for new multi-beneficiary payments. 
+    //        To details see :
+    //        activateIOPaymentRes :  https://github.com/pagopa/pagopa-api/blob/0d2ae003abc7cdcd55e339af41220adbe4a59b06/cd/nodeForIO.xsd#L479
+    //        activatePaymentNoticeRes : https://github.com/pagopa/pagopa-api/blob/0d2ae003abc7cdcd55e339af41220adbe4a59b06/nodo/nodeForPsp.xsd#L709
     if (soapRequest["nfpsp:activateiopaymentreq"]) {
         const amountNotice = "2.00";
         const activateIOPaymenRes = 
