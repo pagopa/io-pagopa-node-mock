@@ -58,6 +58,7 @@ and if node mock is running you'll see the following responses :
 ```
 
 ```xml
+<?xml version="1.0" encoding="UTF-8"?>
 </s:Envelope><s:Envelope xmlns:tns="http://pagopa-api.pagopa.gov.it/node/nodeForPsp.wsdl"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:nfpsp="http://pagopa-api.pagopa.gov.it/node/nodeForPsp.xsd"
@@ -77,7 +78,6 @@ and if node mock is running you'll see the following responses :
       <fiscalCodePA>12345678901</fiscalCodePA>
       <companyName>companyName</companyName>
       <officeName>officeName</officeName>
-
     </nfpsp:verifyPaymentNoticeRes>
   </s:Body>
 </s:Envelope>
