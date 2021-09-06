@@ -87,6 +87,14 @@ export const NodoVerificaRPT = (params: INodoRPTRequest): MockResponse => [
         <faultCode>${params.fault.faultCode}</faultCode>
         <faultString>${params.fault.faultString}</faultString>
         <id>${params.fault.id}</id>
+        ${
+          params.fault.originalFaultCode
+            ? // tslint:disable-next-line:no-nested-template-literals
+              `<originalFaultCode>${params.fault.originalFaultCode}</originalFaultCode>
+          <originalDescription>${params.fault.originalDescription}</originalDescription>
+          <originalFaultString>${params.fault.originalFaultString}</originalFaultString>`
+            : ""
+        }
       </fault>`
           : ""
       }

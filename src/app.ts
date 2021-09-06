@@ -10,10 +10,11 @@ import {
   VerifyPaymentNoticeResponse
 } from "./fixtures/nodoRPTResponses";
 import * as FespCdClient from "./services/pagopa_api/FespCdClient";
-import { PPT_MULTI_BENEFICIARIO } from "./utils/helper";
+import { PAA_PAGAMENTO_DUPLICATO, PPT_ERRORE_EMESSO_DA_PAA, PPT_MULTI_BENEFICIARIO } from "./utils/helper";
 import { logger } from "./utils/logger";
 
 const avvisoMultiBeneficiario = new RegExp("^.*30200.*");
+const avvisoPAIbanNotConfigured = new RegExp("^.*30201.*");
 
 export async function newExpressApp(
   config: Configuration
@@ -54,6 +55,7 @@ export async function newExpressApp(
 
     const iuv = nodoAttivaRPT.codiceidrpt[0]["qrc:qrcode"][0]["qrc:codiuv"][0];
     const isIuvMultiBeneficiario = avvisoMultiBeneficiario.test(iuv);
+
     logger.info(`nodoattivarpt IUV ${iuv}`)
 
     if (isIuvMultiBeneficiario) {
@@ -119,6 +121,7 @@ export async function newExpressApp(
         nodoVerificaRPT.codiceidrpt[0]["qrc:qrcode"][0]["qrc:codiuv"][0];
       logger.info(`nodoverificarpt IUV ${iuv}`)
       const isIuvMultiBeneficiario = avvisoMultiBeneficiario.test(iuv);
+      const isIuvPAIbanNotConfigured = avvisoPAIbanNotConfigured.test(iuv);
       const password = nodoVerificaRPT.password[0];
       if (password !== config.PAGOPA_PROXY.PASSWORD) {
         const nodoVerificaErrorResponse = NodoVerificaRPT({
@@ -145,6 +148,23 @@ export async function newExpressApp(
         return res
           .status(nodoVerificaErrorResponse[0])
           .send(nodoVerificaErrorResponse[1]);
+      }
+      if (isIuvPAIbanNotConfigured) {
+        const nodoVerificaErrorResponse = NodoVerificaRPT({
+          esito: "KO",
+          fault: {
+            faultCode: PPT_ERRORE_EMESSO_DA_PAA.value,
+            faultString: "Errore emesso da pa",
+            id: "0",
+            originalFaultCode: PAA_PAGAMENTO_DUPLICATO.value,
+            originalFaultString: "PAA - Errore emesso da pa",
+            originalDescription: "PAA - Errore emesso da pa",
+          }
+        });
+
+        return res
+        .status(nodoVerificaErrorResponse[0])
+        .send(nodoVerificaErrorResponse[1]);
       }
       const importoSingoloVersamento = "1.00";
       const nodoVerificaSuccessResponse = NodoVerificaRPT({
