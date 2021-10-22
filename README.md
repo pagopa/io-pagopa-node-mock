@@ -1,7 +1,7 @@
 # io-pagopa-node-mock
 
-A mock implementation of the Nodo SOAP service
-
+A mock implementation of the Nodo SOAP service, intended only for internal development and integration.
+> :warning: **Please notice**: this project is NOT suited for testing when you are integrating as a EC/PSP for production purpose.
 ## Usage
 
 ```sh
