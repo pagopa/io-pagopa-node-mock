@@ -204,6 +204,16 @@ export async function newExpressApp(
           .status(activateIOPaymenRes[0])
           .send(activateIOPaymenRes[1]);
       }
+      if (soapRequest["ns2:activatepaymentnoticereq"]) {
+        const amountNotice = "2.00";
+        const activateIOPaymenRes = activatePaymenNoticeResponse({
+            amount: +amountNotice,
+            outcome: "OK"
+        });
+        return res
+            .status(activateIOPaymenRes[0])
+            .send(activateIOPaymenRes[1]);
+    }
     // The SOAP Request not implemented
     res.status(404).send("Not found");
   });
