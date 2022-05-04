@@ -42,8 +42,6 @@ export async function newExpressApp(
   // SOAP Server mock entrypoint
   app.post(config.NODO_MOCK.ROUTES.PPT_NODO, async (req, res) => {
     const soapRequest = req.body["soap:envelope"]["soap:body"][0];
-    console.log(soapRequest)
-
     logger.info("Rx request : ")
     logger.info(soapRequest)
     // The SOAP request is a NodoAttivaRPT request
@@ -214,7 +212,7 @@ export async function newExpressApp(
         return res
           .status(activateIOPaymenRes[0])
           .send(activateIOPaymenRes[1]);
-      }
+      }                
       if (soapRequest["ns2:activatepaymentnoticereq"]) {
         const activatePaymenRes = activatePaymenNoticeResponse();
         return res
