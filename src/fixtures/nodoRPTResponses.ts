@@ -134,8 +134,7 @@ export const activateIOPaymenResponse = (
 export const activatePaymenNoticeResponse = (
 ): MockResponse => [
   200,
-  `<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-  <soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:nfpsp="http://pagopa-api.pagopa.gov.it/node/nodeForIO.xsd">
+  `<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:nfpsp="http://pagopa-api.pagopa.gov.it/node/nodeForIO.xsd">
    <soapenv:Body>
     <nfpsp:activatePaymentNoticeRes>
      <outcome>OK</outcome>
