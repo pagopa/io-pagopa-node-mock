@@ -9,6 +9,7 @@ import { CONFIG, Configuration } from "./config";
 import { closePayment, ClosePaymentRequest } from "./fixtures/closePayment";
 import {
   activateIOPaymenResponse,
+  activatePaymenNoticeResponse,
   NodoAttivaRPT,
   NodoVerificaRPT,
   VerifyPaymentNoticeResponse
@@ -214,11 +215,7 @@ export async function newExpressApp(
           .send(activateIOPaymenRes[1]);
       }
       if (soapRequest["ns2:activatepaymentnoticereq"]) {
-        const amountNotice = "2.00";
-        const activateIOPaymenRes = activatePaymenNoticeResponse({
-            amount: +amountNotice,
-            outcome: "OK"
-        });
+        const activateIOPaymenRes = activatePaymenNoticeResponse();
         return res
             .status(activateIOPaymenRes[0])
             .send(activateIOPaymenRes[1]);
