@@ -208,7 +208,7 @@ export async function newExpressApp(
         const activatePaymenRes = activatePaymenNoticeResponse();
         return res
             .status(activatePaymenRes[0])
-            .send(activatePaymenRes[1]);
+            .send(activatePaymenRes[1]).setHeader("Content-Type","text/xml");
     }
     // The SOAP Request not implemented
     res.status(404).send("Not found");
