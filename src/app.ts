@@ -203,12 +203,25 @@ export async function newExpressApp(
     //        activateIOPaymentRes :  https://github.com/pagopa/pagopa-api/blob/0d2ae003abc7cdcd55e339af41220adbe4a59b06/cd/nodeForIO.xsd#L479
     //        activatePaymentNoticeRes : https://github.com/pagopa/pagopa-api/blob/0d2ae003abc7cdcd55e339af41220adbe4a59b06/nodo/nodeForPsp.xsd#L709
     if (soapRequest["nfpsp:activateiopaymentreq"]) {
-      const amountNotice = "2.00";
-      const activateIOPaymenRes = activateIOPaymenResponse({
-        amount: +amountNotice,
-        outcome: "OK"
-      });
-      return res.status(activateIOPaymenRes[0]).send(activateIOPaymenRes[1]);
+        const amountNotice = "2.00";
+        const activateIOPaymenRes = 
+        activateIOPaymenResponse({
+          amount: +amountNotice,
+          outcome: "OK"
+        });
+        return res
+          .status(activateIOPaymenRes[0])
+          .send(activateIOPaymenRes[1]);
+      }
+      if (soapRequest["ns2:activatepaymentnoticereq"]) {
+        const amountNotice = "2.00";
+        const activateIOPaymenRes = activatePaymenNoticeResponse({
+            amount: +amountNotice,
+            outcome: "OK"
+        });
+        return res
+            .status(activateIOPaymenRes[0])
+            .send(activateIOPaymenRes[1]);
     }
     // The SOAP Request not implemented
     res.status(404).send("Not found");
