@@ -31,6 +31,7 @@ export async function newExpressApp(
 
   // SOAP Server mock entrypoint
   app.post(config.NODO_MOCK.ROUTES.PPT_NODO, async (req, res) => {
+    console.log(req)
     const soapRequest = req.body["soap:envelope"]["soap:body"][0];
     logger.info("Rx request : ")
     logger.info(soapRequest)
