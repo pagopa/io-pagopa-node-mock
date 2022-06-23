@@ -2,8 +2,8 @@
  * Define SOAP Clients to call PPTPort services provided by PagoPa
  */
 
-import { curry, flip } from "fp-ts/lib/function";
 import * as soap from "soap";
+import { nodoAttivaRPT_element_ppt } from "../generated/PagamentiTelematiciPspNodoservice/nodoAttivaRPT_element_ppt";
 
 import {
   createClient,
@@ -43,8 +43,11 @@ export class PagamentiTelematiciPspNodoAsyncClient {
   public readonly nodoVerificaRPT = promisifySoapMethod(
     this.client.nodoVerificaRPT
   );
-  public readonly nodoAttivaRPT = flip(
-    curry(promisifySoapMethod(this.client.nodoAttivaRPT))
-  )({ postProcess: fixImportoSingoloVersamentoDigits });
+
   constructor(private readonly client: IPPTPortSoap) {}
+
+  public readonly nodoAttivaRPT = (args: nodoAttivaRPT_element_ppt) =>
+    promisifySoapMethod(this.client.nodoAttivaRPT)(args, {
+      postProcess: fixImportoSingoloVersamentoDigits
+    });
 }

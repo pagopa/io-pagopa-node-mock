@@ -1,6 +1,9 @@
+import {IWithinRangeNumberTag} from "@pagopa/ts-commons/lib/numbers";
 import * as express from "express";
 import * as bodyParserXml from "express-xml-bodyparser";
-import { IWithinRangeStringTag } from "italia-ts-commons/lib/strings";
+import * as E from "fp-ts/lib/Either";
+import { pipe } from "fp-ts/lib/function";
+import { IWithinRangeStringTag } from "@pagopa/ts-commons/lib/strings";
 import * as morgan from "morgan";
 import { CONFIG, Configuration } from "./config";
 import { closePayment, ClosePaymentRequest } from "./fixtures/closePayment";
@@ -172,7 +175,7 @@ export async function newExpressApp(
           .status(nodoVerificaErrorResponse[0])
           .send(nodoVerificaErrorResponse[1]);
       }
-      const importoSingoloVersamento = "1.00";
+      const importoSingoloVersamento = 1.00 as 99999999.99 | (number & IWithinRangeNumberTag<0, 99999999.99>);
       const nodoVerificaSuccessResponse = NodoVerificaRPT({
         datiPagamento: { importoSingoloVersamento },
         esito: "OK"
@@ -208,18 +211,6 @@ export async function newExpressApp(
     }
     // The SOAP Request not implemented
     res.status(404).send("Not found");
-  });
-
-  app.post("v2/closepayment", async (req, res) => {
-    ClosePaymentRequest.decode(req.body)
-      .map(closePayment)
-      .map(([response, status]) => res.status(status).send(response))
-      .mapLeft(errors => {
-        logger.error(errors);
-        return res
-          .status(400)
-          .send({ descrizione: "closePayment: bad request", esito: "KO" });
-      });
   });
 
   return app;

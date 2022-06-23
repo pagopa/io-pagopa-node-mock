@@ -1,13 +1,15 @@
+import {pipe} from "fp-ts/lib/function";
 import * as http from "http";
-import { reporters } from "italia-ts-commons";
+import { reporters } from "@pagopa/ts-commons";
 import * as App from "./app";
 import { CONFIG, Configuration } from "./config";
 import { logger } from "./utils/logger";
+import * as E from "fp-ts/lib/Either";
 
 // Retrieve server configuration
-const config = Configuration.decode(CONFIG).getOrElseL(errors => {
+const config = pipe(Configuration.decode(CONFIG), E.getOrElseW(errors => {
   throw Error(`Invalid configuration: ${reporters.readableReport(errors)}`);
-});
+}));
 
 // Create the Express Application
 App.newExpressApp(config)

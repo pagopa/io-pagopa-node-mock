@@ -3,7 +3,7 @@
  */
 
 import * as t from "io-ts";
-import { NonEmptyString } from "italia-ts-commons/lib/strings";
+import { NonEmptyString } from "@pagopa/ts-commons/lib/strings";
 import { stPassword_type_ppt } from "./generated/PagamentiTelematiciPspNodoservice/stPassword_type_ppt";
 import { stText35_type_pay_i } from "./generated/PagamentiTelematiciPspNodoservice/stText35_type_pay_i";
 
