@@ -3,6 +3,7 @@ import * as bodyParserXml from "express-xml-bodyparser";
 import { IWithinRangeStringTag } from "italia-ts-commons/lib/strings";
 import * as morgan from "morgan";
 import { CONFIG, Configuration } from "./config";
+import { closePayment, ClosePaymentRequest } from "./fixtures/closePayment";
 import {
   activateIOPaymenResponse,
   NodoAttivaRPT,
@@ -208,5 +209,18 @@ export async function newExpressApp(
     // The SOAP Request not implemented
     res.status(404).send("Not found");
   });
+
+  app.post("v2/closepayment", async (req, res) => {
+    ClosePaymentRequest.decode(req.body)
+      .map(closePayment)
+      .map(([response, status]) => res.status(status).send(response))
+      .mapLeft(errors => {
+        logger.error(errors);
+        return res
+          .status(400)
+          .send({ descrizione: "closePayment: bad request", esito: "KO" });
+      });
+  });
+
   return app;
 }
