@@ -213,5 +213,21 @@ export async function newExpressApp(
     res.status(404).send("Not found");
   });
 
+  app.post("/v2/closepayment", async (req, res) => {
+    return pipe(
+        ClosePaymentRequest.decode(req.body),
+        E.map(closePayment),
+        E.map(([response, status]) => {
+          return res.status(status).json(response);
+        }),
+        E.mapLeft(errors => {
+          logger.error(errors);
+          return res
+              .status(400)
+              .json({ descrizione: "closePayment: bad request", esito: "KO" });
+        })
+    );
+  });
+
   return app;
 }
