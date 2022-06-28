@@ -1,8 +1,12 @@
+import {IWithinRangeNumberTag} from "@pagopa/ts-commons/lib/numbers";
 import * as express from "express";
 import * as bodyParserXml from "express-xml-bodyparser";
-import { IWithinRangeStringTag } from "italia-ts-commons/lib/strings";
+import * as E from "fp-ts/lib/Either";
+import { pipe } from "fp-ts/lib/function";
+import { IWithinRangeStringTag } from "@pagopa/ts-commons/lib/strings";
 import * as morgan from "morgan";
 import { CONFIG, Configuration } from "./config";
+import { closePayment, ClosePaymentRequest } from "./fixtures/closePayment";
 import {
   activateIOPaymenResponse,
   NodoAttivaRPT,
@@ -10,12 +14,17 @@ import {
   VerifyPaymentNoticeResponse
 } from "./fixtures/nodoRPTResponses";
 import * as FespCdClient from "./services/pagopa_api/FespCdClient";
-import { PAA_PAGAMENTO_DUPLICATO, PPT_ERRORE_EMESSO_DA_PAA, PPT_MULTI_BENEFICIARIO } from "./utils/helper";
+import {
+  PAA_PAGAMENTO_DUPLICATO,
+  PPT_ERRORE_EMESSO_DA_PAA,
+  PPT_MULTI_BENEFICIARIO
+} from "./utils/helper";
 import { logger } from "./utils/logger";
 
 const avvisoMultiBeneficiario = new RegExp("^.*30200.*");
 const avvisoPAIbanNotConfigured = new RegExp("^.*30201.*");
 
+// tslint:disable-next-line:cognitive-complexity
 export async function newExpressApp(
   config: Configuration
 ): Promise<Express.Application> {
@@ -32,8 +41,8 @@ export async function newExpressApp(
   // SOAP Server mock entrypoint
   app.post(config.NODO_MOCK.ROUTES.PPT_NODO, async (req, res) => {
     const soapRequest = req.body["soap:envelope"]["soap:body"][0];
-    logger.info("Rx request : ")
-    logger.info(soapRequest)
+    logger.info("Rx request : ");
+    logger.info(soapRequest);
     // The SOAP request is a NodoAttivaRPT request
     if (soapRequest["ppt:nodoattivarpt"]) {
       const nodoAttivaRPT = soapRequest["ppt:nodoattivarpt"][0];
@@ -53,12 +62,13 @@ export async function newExpressApp(
           .send(nodoAttivaErrorResponse[1]);
       }
 
-    const iuv = nodoAttivaRPT.codiceidrpt[0]["qrc:qrcode"][0]["qrc:codiuv"][0];
-    const isIuvMultiBeneficiario = avvisoMultiBeneficiario.test(iuv);
+      const iuv =
+        nodoAttivaRPT.codiceidrpt[0]["qrc:qrcode"][0]["qrc:codiuv"][0];
+      const isIuvMultiBeneficiario = avvisoMultiBeneficiario.test(iuv);
 
-    logger.info(`nodoattivarpt IUV ${iuv}`)
+      logger.info(`nodoattivarpt IUV ${iuv}`);
 
-    if (isIuvMultiBeneficiario) {
+      if (isIuvMultiBeneficiario) {
         const nodoAttivaErrorResponse = NodoAttivaRPT({
           esito: "KO",
           fault: {
@@ -66,11 +76,10 @@ export async function newExpressApp(
             faultString: "Avviso Multi Beneficiario",
             id: "0"
           }
-     
         });
         return res
-        .status(nodoAttivaErrorResponse[0])
-        .send(nodoAttivaErrorResponse[1]);
+          .status(nodoAttivaErrorResponse[0])
+          .send(nodoAttivaErrorResponse[1]);
       }
       const importoSingoloVersamento =
         nodoAttivaRPT.datipagamentopsp[0].importosingoloversamento[0];
@@ -119,7 +128,7 @@ export async function newExpressApp(
       const nodoVerificaRPT = soapRequest["ppt:nodoverificarpt"][0];
       const iuv =
         nodoVerificaRPT.codiceidrpt[0]["qrc:qrcode"][0]["qrc:codiuv"][0];
-      logger.info(`nodoverificarpt IUV ${iuv}`)
+      logger.info(`nodoverificarpt IUV ${iuv}`);
       const isIuvMultiBeneficiario = avvisoMultiBeneficiario.test(iuv);
       const isIuvPAIbanNotConfigured = avvisoPAIbanNotConfigured.test(iuv);
       const password = nodoVerificaRPT.password[0];
@@ -156,17 +165,17 @@ export async function newExpressApp(
             faultCode: PPT_ERRORE_EMESSO_DA_PAA.value,
             faultString: "Errore emesso da pa",
             id: "0",
-            originalFaultCode: PAA_PAGAMENTO_DUPLICATO.value,
-            originalFaultString: "PAA - Errore emesso da pa",
             originalDescription: "PAA - Errore emesso da pa",
+            originalFaultCode: PAA_PAGAMENTO_DUPLICATO.value,
+            originalFaultString: "PAA - Errore emesso da pa"
           }
         });
 
         return res
-        .status(nodoVerificaErrorResponse[0])
-        .send(nodoVerificaErrorResponse[1]);
+          .status(nodoVerificaErrorResponse[0])
+          .send(nodoVerificaErrorResponse[1]);
       }
-      const importoSingoloVersamento = "1.00";
+      const importoSingoloVersamento = 1.00 as 99999999.99 | (number & IWithinRangeNumberTag<0, 99999999.99>);
       const nodoVerificaSuccessResponse = NodoVerificaRPT({
         datiPagamento: { importoSingoloVersamento },
         esito: "OK"
@@ -188,23 +197,37 @@ export async function newExpressApp(
     }
     // The SOAP request is a activateiopaymentreq request
     // NOTE : activateIOPayment is a special request of the canonical activatePaymentNotice made available by NODO for the PSPs.
-    //        It's only used by the appIO for new multi-beneficiary payments. 
+    //        It's only used by the appIO for new multi-beneficiary payments.
     //        To details see :
     //        activateIOPaymentRes :  https://github.com/pagopa/pagopa-api/blob/0d2ae003abc7cdcd55e339af41220adbe4a59b06/cd/nodeForIO.xsd#L479
     //        activatePaymentNoticeRes : https://github.com/pagopa/pagopa-api/blob/0d2ae003abc7cdcd55e339af41220adbe4a59b06/nodo/nodeForPsp.xsd#L709
     if (soapRequest["nfpsp:activateiopaymentreq"]) {
-        const amountNotice = "2.00";
-        const activateIOPaymenRes = 
-        activateIOPaymenResponse({
-          amount: +amountNotice,
-          outcome: "OK"
-        });
-        return res
-          .status(activateIOPaymenRes[0])
-          .send(activateIOPaymenRes[1]);
-      }
+      const amountNotice = "2.00";
+      const activateIOPaymenRes = activateIOPaymenResponse({
+        amount: +amountNotice,
+        outcome: "OK"
+      });
+      return res.status(activateIOPaymenRes[0]).send(activateIOPaymenRes[1]);
+    }
     // The SOAP Request not implemented
     res.status(404).send("Not found");
   });
+
+  app.post("/v2/closepayment", async (req, res) => {
+    return pipe(
+        ClosePaymentRequest.decode(req.body),
+        E.map(closePayment),
+        E.map(([response, status]) => {
+          return res.status(status).json(response);
+        }),
+        E.mapLeft(errors => {
+          logger.error(errors);
+          return res
+              .status(400)
+              .json({ descrizione: "closePayment: bad request", esito: "KO" });
+        })
+    );
+  });
+
   return app;
 }

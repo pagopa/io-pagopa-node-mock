@@ -1,4 +1,4 @@
-import { NonEmptyString } from "italia-ts-commons/lib/strings";
+import { NonEmptyString } from "@pagopa/ts-commons/lib/strings";
 import * as path from "path";
 import * as soap from "soap";
 import { createClient, promisifySoapMethod } from "../../utils/soap";

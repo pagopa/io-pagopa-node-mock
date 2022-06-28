@@ -1,12 +1,17 @@
-import * as express from "express";
-import * as http from "http";
+import {IWithinRangeNumberTag} from "@pagopa/ts-commons/lib/numbers";
 import {
   IWithinRangeStringTag,
   NonEmptyString
-} from "italia-ts-commons/lib/strings";
+} from "@pagopa/ts-commons/lib/strings";
+import * as express from "express";
+import * as E from "fp-ts/lib/Either";
+import { pipe } from "fp-ts/lib/function";
+import * as http from "http";
 import waitForExpect from "wait-for-expect";
 import * as FespCdServer from "../__mock__/FespCdServer";
+import { PagamentiTelematiciPspNodoAsyncClient } from "../__mock__/PPTPortClient";
 import * as PPTPortClient from "../__mock__/PPTPortClient";
+import { RestClient } from "../__mock__/RestClient";
 import { newExpressApp } from "../app";
 import { CONFIG, Configuration } from "../config";
 import { cdInfoWisp_element_ppt } from "../generated/FespCdService/cdInfoWisp_element_ppt";
@@ -14,6 +19,7 @@ import { cdInfoWispResponse_element_ppt } from "../generated/FespCdService/cdInf
 import { nodoAttivaRPT_element_ppt } from "../generated/PagamentiTelematiciPspNodoservice/nodoAttivaRPT_element_ppt";
 import { nodoVerificaRPT_element_ppt } from "../generated/PagamentiTelematiciPspNodoservice/nodoVerificaRPT_element_ppt";
 import * as FespCdClient from "../services/pagopa_api/FespCdClient";
+import {logger} from "../utils/logger";
 
 const sleep = (ms: number) => new Promise(ok => setTimeout(ok, ms));
 // tslint:disable-next-line: no-let
@@ -29,14 +35,18 @@ const aValidPassword = CONFIG.PAGOPA_PROXY.PASSWORD as string &
 const aCodiceContestoPagamento = "1" as string & IWithinRangeStringTag<1, 36>;
 const aCodiceInfrastrutturaPSP = "";
 const aCodiceIdRPT = {
-  a: true
+  "qrc:qrcode": [
+    {
+      "qrc:codiuv": "iuv"
+    }
+  ]
 };
 const mockedNodoAttivaRequest: nodoAttivaRPT_element_ppt = {
   codiceContestoPagamento: aCodiceContestoPagamento,
   codiceIdRPT: aCodiceIdRPT,
   codificaInfrastrutturaPSP: aCodiceInfrastrutturaPSP,
   datiPagamentoPSP: {
-    importoSingoloVersamento: anImportoSingoloVersamento
+    importoSingoloVersamento: anImportoSingoloVersamento as 99999999.99 | (number & IWithinRangeNumberTag<0, 99999999.99>)
   },
   identificativoCanale: anIdentificativoCanale,
   identificativoCanalePagamento: "1" as string & IWithinRangeStringTag<1, 36>,
@@ -58,7 +68,9 @@ const mockedNodoVerificaRPT: nodoVerificaRPT_element_ppt = {
   password: aValidPassword
 };
 
-const getPagopaClient = async () =>
+const getPagopaClient = async (): Promise<
+  PagamentiTelematiciPspNodoAsyncClient
+> =>
   new PPTPortClient.PagamentiTelematiciPspNodoAsyncClient(
     await PPTPortClient.createPagamentiTelematiciPspNodoClient({
       endpoint: `${CONFIG.NODO_MOCK.HOST}:${CONFIG.NODO_MOCK.PORT}${CONFIG.NODO_MOCK.ROUTES.PPT_NODO}`,
@@ -78,9 +90,12 @@ describe("index#nodoAttivaRPT", () => {
 
   beforeAll(async () => {
     // Retrieve server configuration
-    const config = Configuration.decode(CONFIG).getOrElseL(() => {
-      throw Error(`Invalid configuration.`);
-    });
+    const config = pipe(
+      Configuration.decode(CONFIG),
+      E.getOrElseW(() => {
+        throw Error(`Invalid configuration.`);
+      })
+    );
     server = http.createServer(await newExpressApp(config));
     server.listen(config.NODO_MOCK.PORT);
     // Configure PagoPaProxy mock server
@@ -141,9 +156,12 @@ describe("index#nodoAttivaRPT", () => {
 describe("index#nodoVerificaRPT", () => {
   beforeAll(async () => {
     // Retrieve server configuration
-    const config = Configuration.decode(CONFIG).getOrElseL(() => {
-      throw Error(`Invalid configuration.`);
-    });
+    const config = pipe(
+      Configuration.decode(CONFIG),
+      E.getOrElseW(() => {
+        throw Error(`Invalid configuration.`);
+      })
+    );
     server = http.createServer(await newExpressApp(config));
     server.listen(config.NODO_MOCK.PORT);
   });
@@ -176,7 +194,7 @@ describe("index#nodoVerificaRPT", () => {
         datiPagamentoPA: {
           causaleVersamento: "Causale versamento mock",
           ibanAccredito: "IT47L0300203280645139156879",
-          importoSingoloVersamento: anImportoSingoloVersamento.toFixed(2)
+          importoSingoloVersamento: anImportoSingoloVersamento.toString()
         },
         esito: "OK"
       }
@@ -192,19 +210,22 @@ describe("Test SOAP Server", () => {
         input: unknown,
         cb?: (data: cdInfoWispResponse_element_ppt) => void
       ) => {
-        cdInfoWisp_element_ppt.decode(input).bimap(
-          err =>
-            cb
-              ? cb({
-                  esito: "KO"
-                })
-              : err,
-          _ =>
-            cb
-              ? cb({
-                  esito: "OK"
-                })
-              : _
+        pipe(
+          cdInfoWisp_element_ppt.decode(input),
+          E.bimap(
+            err =>
+              cb
+                ? cb({
+                    esito: "KO"
+                  })
+                : err,
+            _ =>
+              cb
+                ? cb({
+                    esito: "OK"
+                  })
+                : _
+          )
         );
       }
     });
@@ -235,5 +256,142 @@ describe("Test SOAP Server", () => {
     });
     expect(response).toEqual({ esito: "OK" });
     soapServer.close();
+  });
+});
+
+describe("closePayment", () => {
+  // tslint:disable-next-line:no-identical-functions
+  beforeAll(async () => {
+    // Retrieve server configuration
+    const config = pipe(
+      Configuration.decode(CONFIG),
+      E.getOrElseW(() => {
+        throw Error(`Invalid configuration.`);
+      })
+    );
+    server = http.createServer(await newExpressApp(config));
+    server.listen(config.NODO_MOCK.PORT);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+  afterAll(() => {
+    server.close();
+  });
+
+  it("closePayment should return a OK response", async () => {
+    const config = pipe(
+        Configuration.decode(CONFIG),
+        E.getOrElseW(() => {
+          throw Error(`Invalid configuration.`);
+        })
+    );
+    const restClient = new RestClient({
+      basepath: `http://localhost:${config.NODO_MOCK.PORT}`
+    });
+
+    const response = await restClient.closePayment({
+      additionalPaymentInformations: {},
+      fee: 1.0,
+      identificativoCanale: "13212880160_02",
+      identificativoIntermediario: "13212880160",
+      identificativoPsp: "CIPBITMM",
+      outcome: "OK",
+      paymentTokens: ["8b13913acff44b559ed2e6e74cd93c17"],
+      timestampOperation: "2022-02-22T14:41:58.811+01:00",
+      tipoVersamento: "QUALSIASICOSAPAY",
+      totalAmount: 51.0,
+      transactionId: "99910087308786"
+    });
+
+    const [status, responseData] = pipe(
+        response,
+        E.getOrElseW(l => {
+          logger.info(l);
+          throw new Error("Expected `Right` on closePayment");
+        })
+    );
+
+    expect(status).toEqual(200);
+    expect(responseData.esito).toEqual("OK");
+  });
+
+  it("closePayment should return NOT FOUND on appropriate mockCase", async () => {
+    const config = pipe(
+        Configuration.decode(CONFIG),
+        E.getOrElseW(() => {
+          throw Error(`Invalid configuration.`);
+        })
+    );
+    const restClient = new RestClient({
+      basepath: `http://localhost:${config.NODO_MOCK.PORT}`
+    });
+
+    const response = await restClient.closePayment({
+      additionalPaymentInformations: {
+        mockCase: "notFound"
+      },
+      fee: 1.0,
+      identificativoCanale: "13212880160_02",
+      identificativoIntermediario: "13212880160",
+      identificativoPsp: "CIPBITMM",
+      outcome: "OK",
+      paymentTokens: ["8b13913acff44b559ed2e6e74cd93c17"],
+      timestampOperation: "2022-02-22T14:41:58.811+01:00",
+      tipoVersamento: "QUALSIASICOSAPAY",
+      totalAmount: 51.0,
+      transactionId: "99910087308786"
+    });
+
+    const [status, responseData] = pipe(
+        response,
+        E.getOrElseW(l => {
+          logger.info(l);
+          throw new Error("Expected `Right` on closePayment");
+        })
+    );
+
+    expect(status).toEqual(404);
+    expect(responseData.esito).toEqual("KO");
+  });
+
+  it("closePayment should return NOT FOUND on appropriate mockCase", async () => {
+    const config = pipe(
+        Configuration.decode(CONFIG),
+        E.getOrElseW(() => {
+          throw Error(`Invalid configuration.`);
+        })
+    );
+    const restClient = new RestClient({
+      basepath: `http://localhost:${config.NODO_MOCK.PORT}`
+    });
+
+    const response = await restClient.closePayment({
+      additionalPaymentInformations: {
+        mockCase: "unprocessableEntity"
+      },
+      fee: 1.0,
+      identificativoCanale: "13212880160_02",
+      identificativoIntermediario: "13212880160",
+      identificativoPsp: "CIPBITMM",
+      outcome: "OK",
+      paymentTokens: ["8b13913acff44b559ed2e6e74cd93c17"],
+      timestampOperation: "2022-02-22T14:41:58.811+01:00",
+      tipoVersamento: "QUALSIASICOSAPAY",
+      totalAmount: 51.0,
+      transactionId: "99910087308786"
+    });
+
+    const [status, responseData] = pipe(
+        response,
+        E.getOrElseW(l => {
+          logger.info(l);
+          throw new Error("Expected `Right` on closePayment");
+        })
+    );
+
+    expect(status).toEqual(422);
+    expect(responseData.esito).toEqual("KO");
   });
 });

@@ -1,6 +1,6 @@
 // TODO: Duplicated file with pagopa-proxy
 import * as fs from "fs";
-import { NonEmptyString } from "italia-ts-commons/lib/strings";
+import { NonEmptyString } from "@pagopa/ts-commons/lib/strings";
 import * as soap from "soap";
 
 // type signature for callback based async soap methods
@@ -24,7 +24,7 @@ export type SoapMethodCB<I, O> = (
  */
 export async function readWsdl(path: NonEmptyString): Promise<string> {
   return new Promise<string>((resolve, reject) => {
-    fs.readFile(path, { encoding: "UTF-8" }, (err, wsdl) => {
+    fs.readFile(path, { encoding: "utf8" }, (err, wsdl) => {
       if (err) {
         return reject(err);
       }
