@@ -10,8 +10,7 @@ const ClosePaymentRequestOK = t.interface({
   paymentTokens: t.readonly(t.array(t.string)),
   timestampOperation: t.string,
   tipoVersamento: t.string,
-  totalAmount: t.number,
-  transactionId: t.string
+  totalAmount: t.number
 });
 
 const ClosePaymentRequestKO = t.interface({
