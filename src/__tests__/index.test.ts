@@ -302,7 +302,6 @@ describe("closePayment", () => {
       timestampOperation: "2022-02-22T14:41:58.811+01:00",
       tipoVersamento: "QUALSIASICOSAPAY",
       totalAmount: 51.0,
-      transactionId: "99910087308786"
     });
 
     const [status, responseData] = pipe(
@@ -341,7 +340,6 @@ describe("closePayment", () => {
       timestampOperation: "2022-02-22T14:41:58.811+01:00",
       tipoVersamento: "QUALSIASICOSAPAY",
       totalAmount: 51.0,
-      transactionId: "99910087308786"
     });
 
     const [status, responseData] = pipe(
@@ -380,7 +378,6 @@ describe("closePayment", () => {
       timestampOperation: "2022-02-22T14:41:58.811+01:00",
       tipoVersamento: "QUALSIASICOSAPAY",
       totalAmount: 51.0,
-      transactionId: "99910087308786"
     });
 
     const [status, responseData] = pipe(
