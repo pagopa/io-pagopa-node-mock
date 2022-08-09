@@ -20,6 +20,7 @@ import {
   PPT_MULTI_BENEFICIARIO
 } from "./utils/helper";
 import { logger } from "./utils/logger";
+import { DateFromString } from "@pagopa/ts-commons/lib/dates";
 
 const avvisoMultiBeneficiario = new RegExp("^.*30200.*");
 const avvisoPAIbanNotConfigured = new RegExp("^.*30201.*");
@@ -189,7 +190,8 @@ export async function newExpressApp(
       const amountNotice = "2.00";
       const verifyPaymentNoticeRes = VerifyPaymentNoticeResponse({
         amount: +amountNotice,
-        outcome: "OK"
+        outcome: "OK",
+        dueDate: pipe(DateFromString.decode("2025-07-31"), E.getOrElseW(_ => undefined))
       });
       return res
         .status(verifyPaymentNoticeRes[0])
