@@ -64,8 +64,8 @@ export const NodoAttivaRPT = (params: INodoRPTRequest): MockResponse => [
 export const NodoVerificaRPT = (params: INodoRPTRequest): MockResponse => [
   200,
   `<?xml version="1.0" encoding="UTF-8"?>
-<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
-<s:Body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+<soapenv:Body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xmlns:xsd="http://www.w3.org/2001/XMLSchema"
         xmlns:ppt="http://ws.pagamenti.telematici.gov/">
   <nodoVerificaRPTRisposta>
@@ -102,8 +102,8 @@ export const NodoVerificaRPT = (params: INodoRPTRequest): MockResponse => [
       }
     </ppt:nodoVerificaRPTRisposta>
   </nodoVerificaRPTRisposta>
-</s:Body>
-</s:Envelope>`
+</soapenv:Body>
+</soapenv:Envelope>`
 ];
 
 export const VerifyPaymentNoticeResponse = (
