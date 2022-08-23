@@ -126,6 +126,7 @@ export async function newExpressApp(
         .send(nodoAttivaSuccessResponse[1]);
     }
     // The SOAP request is a NodoVerificaRPT request
+    console.log("Check SOAP request is a NodoVerificaRPT request")
     if (soapRequest["ppt:nodoverificarpt"] || soapRequest["ns3:nodoverificarpt"]) {
       const nodoVerificaRPT = soapRequest["ppt:nodoverificarpt"] ? soapRequest["ppt:nodoverificarpt"][0] : soapRequest["ns3:nodoverificarpt"][0];
       const iuv = nodoVerificaRPT.codiceidrpt[0]["qrc:qrcode"] ? 
