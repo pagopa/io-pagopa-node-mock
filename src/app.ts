@@ -183,6 +183,7 @@ export async function newExpressApp(
         datiPagamento: { importoSingoloVersamento },
         esito: "OK"
       });
+      logger.info(nodoVerificaSuccessResponse);
       return res
         .status(nodoVerificaSuccessResponse[0])
         .send(nodoVerificaSuccessResponse[1]);
