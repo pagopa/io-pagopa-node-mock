@@ -2,6 +2,7 @@ import { ctFaultBean_type_nfpsp } from "../generated/nodeForPsp/ctFaultBean_type
 import { stAmount_type_nfpsp } from "../generated/nodeForPsp/stAmount_type_nfpsp";
 import { faultBean_type_ppt } from "../generated/PagamentiTelematiciPspNodoservice/faultBean_type_ppt";
 import { nodoTipoDatiPagamentoPSP_type_ppt } from "../generated/PagamentiTelematiciPspNodoservice/nodoTipoDatiPagamentoPSP_type_ppt";
+import { DateFromString } from "@pagopa/ts-commons/lib/dates";
 
 type MockResponse = readonly [number, string];
 
@@ -15,6 +16,7 @@ interface IVerifyPaymentNoticeReq {
   outcome: "OK" | "KO";
   fault?: ctFaultBean_type_nfpsp;
   amount?: stAmount_type_nfpsp;
+  dueDate?: DateFromString;
 }
 
 interface IActivateIOPaymentReq {
