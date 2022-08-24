@@ -110,7 +110,26 @@ export const VerifyPaymentNoticeResponse = (
   params: IVerifyPaymentNoticeReq
 ): MockResponse => [
   200,
-  `<?xml version="1.0" encoding="UTF-8" standalone="no" ?><soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:nfpsp="http://pagopa-api.pagopa.gov.it/node/nodeForPsp.xsd" xmlns:tns="http://pagopa-api.pagopa.gov.it/node/nodeForPsp.wsdl"><soapenv:Body><nfpsp:verifyPaymentNoticeRes><outcome>OK</outcome><paymentList><paymentOptionDescription><amount>17.00</amount><options>EQ</options><paymentNote>/RFB/349192200032537944/17.00/TXT/Reversale W14680/2022 CF: INCIDENTI  STRADALI||||</paymentNote></paymentOptionDescription></paymentList><paymentDescription>Reversale W14680/2022 CF: INCIDENTI  STRADALI||||</paymentDescription><fiscalCodePA>02438750586</fiscalCodePA><companyName>Roma Capitale</companyName><officeName>CORPO DI POLIZIA LOCALE DI ROMA CAPITALE</officeName></nfpsp:verifyPaymentNoticeRes></soapenv:Body></soapenv:Envelope>`
+  `<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+  <soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:nfpsp="http://pagopa-api.pagopa.gov.it/node/nodeForPsp.xsd" xmlns:tns="http://pagopa-api.pagopa.gov.it/node/nodeForPsp.wsdl">
+    <soapenv:Body>
+      <nfpsp:verifyPaymentNoticeRes>
+        <outcome>OK</outcome>
+        <paymentList>
+          <paymentOptionDescription>
+            <amount>17.00</amount>
+            <options>EQ</options>
+            <dueDate>${params.dueDate}</dueDate>
+            <paymentNote>/RFB/349192200032537944/17.00/TXT/Reversale W14680/2022 CF: INCIDENTI  STRADALI||||</paymentNote>
+          </paymentOptionDescription>
+        </paymentList>
+        <paymentDescription>Reversale W14680/2022 CF: INCIDENTI  STRADALI||||</paymentDescription>
+        <fiscalCodePA>02438750586</fiscalCodePA>
+        <companyName>Roma Capitale</companyName>
+        <officeName>CORPO DI POLIZIA LOCALE DI ROMA CAPITALE</officeName>
+      </nfpsp:verifyPaymentNoticeRes>
+    </soapenv:Body>
+  </soapenv:Envelope>`
 ];
 
 export const activateIOPaymenResponse = (

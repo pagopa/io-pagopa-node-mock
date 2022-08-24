@@ -189,7 +189,7 @@ export async function newExpressApp(
         .send(nodoVerificaSuccessResponse[1]);
     }
     // The SOAP request is a verifypaymentnoticereq request
-    if (soapRequest["nfpsp:verifypaymentnoticereq"]) {
+    if (soapRequest["nfpsp:verifypaymentnoticereq"] || soapRequest["ns2:verifypaymentnoticereq"]) {
       const amountNotice = "2.00";
       const verifyPaymentNoticeRes = VerifyPaymentNoticeResponse({
         amount: +amountNotice,
