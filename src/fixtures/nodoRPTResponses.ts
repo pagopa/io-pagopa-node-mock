@@ -68,8 +68,8 @@ export const NodoVerificaRPT = (params: INodoRPTRequest): MockResponse => [
 <s:Body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xmlns:xsd="http://www.w3.org/2001/XMLSchema"
         xmlns:ppt="http://ws.pagamenti.telematici.gov/">
-  <nodoVerificaRPTRisposta>
-    <ppt:nodoVerificaRPTRisposta>
+  <ppt:nodoVerificaRPTRisposta xmlns:ppt='http://ws.pagamenti.telematici.gov/'>
+    <nodoVerificaRPTRisposta>
       <esito>${params.esito}</esito>
       ${
         params.datiPagamento
@@ -100,8 +100,8 @@ export const NodoVerificaRPT = (params: INodoRPTRequest): MockResponse => [
       </fault>`
           : ""
       }
-    </ppt:nodoVerificaRPTRisposta>
-  </nodoVerificaRPTRisposta>
+    </nodoVerificaRPTRisposta>
+  </ppt:nodoVerificaRPTRisposta>
 </s:Body>
 </s:Envelope>`
 ];
