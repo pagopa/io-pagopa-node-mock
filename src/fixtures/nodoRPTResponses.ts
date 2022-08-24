@@ -67,9 +67,9 @@ export const NodoVerificaRPT = (params: INodoRPTRequest): MockResponse => [
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
 <soapenv:Body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-        xmlns:ppt="http://ws.pagamenti.telematici.gov/">
+        xmlns:ns="http://ws.pagamenti.telematici.gov/">
   <nodoVerificaRPTRisposta>
-    <ppt:nodoVerificaRPTRisposta>
+    <ns:nodoVerificaRPTRisposta>
       <esito>${params.esito}</esito>
       ${
         params.datiPagamento
@@ -100,7 +100,7 @@ export const NodoVerificaRPT = (params: INodoRPTRequest): MockResponse => [
       </fault>`
           : ""
       }
-    </ppt:nodoVerificaRPTRisposta>
+    </ns:nodoVerificaRPTRisposta>
   </nodoVerificaRPTRisposta>
 </soapenv:Body>
 </soapenv:Envelope>`
