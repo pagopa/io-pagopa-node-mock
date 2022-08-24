@@ -64,12 +64,12 @@ export const NodoAttivaRPT = (params: INodoRPTRequest): MockResponse => [
 export const NodoVerificaRPT = (params: INodoRPTRequest): MockResponse => [
   200,
   `<?xml version="1.0" encoding="UTF-8"?>
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
-<soapenv:Body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+<s:Body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-        xmlns:ns="http://ws.pagamenti.telematici.gov/">
-  <ns:nodoVerificaRPTRisposta>
-    <ns:esitoNodoVerificaRPTRisposta>
+        xmlns:ppt="http://ws.pagamenti.telematici.gov/">
+  <nodoVerificaRPTRisposta>
+    <ppt:nodoVerificaRPTRisposta>
       <esito>${params.esito}</esito>
       ${
         params.datiPagamento
@@ -100,10 +100,10 @@ export const NodoVerificaRPT = (params: INodoRPTRequest): MockResponse => [
       </fault>`
           : ""
       }
-    </ns:esitoNodoVerificaRPTRisposta>
-  </ns:nodoVerificaRPTRisposta>
-</soapenv:Body>
-</soapenv:Envelope>`
+    </ppt:nodoVerificaRPTRisposta>
+  </nodoVerificaRPTRisposta>
+</s:Body>
+</s:Envelope>`
 ];
 
 export const VerifyPaymentNoticeResponse = (
