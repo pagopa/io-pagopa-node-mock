@@ -68,7 +68,7 @@ export const NodoVerificaRPT = (params: INodoRPTRequest): MockResponse => [
 <soapenv:Body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xmlns:xsd="http://www.w3.org/2001/XMLSchema"
         xmlns:ns="http://ws.pagamenti.telematici.gov/">
-  <nodoVerificaRPTRisposta>
+  <ns:nodoVerificaRPTRisposta>
     <ns:nodoVerificaRPTRisposta>
       <esito>${params.esito}</esito>
       ${
@@ -101,7 +101,7 @@ export const NodoVerificaRPT = (params: INodoRPTRequest): MockResponse => [
           : ""
       }
     </ns:nodoVerificaRPTRisposta>
-  </nodoVerificaRPTRisposta>
+  </ns:nodoVerificaRPTRisposta>
 </soapenv:Body>
 </soapenv:Envelope>`
 ];
