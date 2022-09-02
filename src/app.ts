@@ -64,9 +64,10 @@ export async function newExpressApp(
           .send(nodoAttivaErrorResponse[1]);
       }
 
-      const iuv = 
-        nodoAttivaRPT.codiceidrpt[0]["qrc:qrcode"] ? nodoAttivaRPT.codiceidrpt[0]["qrc:qrcode"][0]["qrc:codiuv"][0] : nodoAttivaRPT.codiceidrpt[0].qrcode.codiuv[0];
-
+      const iuv = nodoAttivaRPT.codiceidrpt[0]["qrc:qrcode"] 
+        ? nodoAttivaRPT.codiceidrpt[0]["qrc:qrcode"][0]["qrc:codiuv"][0] 
+        : nodoAttivaRPT.codiceidrpt[0].qrcode[0].codiuv[0];
+        
       const isIuvMultiBeneficiario = avvisoMultiBeneficiario.test(iuv);
 
       logger.info(`nodoattivarpt IUV ${iuv}`);
