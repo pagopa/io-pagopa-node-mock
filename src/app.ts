@@ -46,8 +46,8 @@ export async function newExpressApp(
     logger.info("Rx request : ")
     logger.info(soapRequest)
     // The SOAP request is a NodoAttivaRPT request
-    if (soapRequest["ppt:nodoattivarpt"]) {
-      const nodoAttivaRPT = soapRequest["ppt:nodoattivarpt"][0];
+    if (soapRequest["ppt:nodoattivarpt"] || soapRequest["ns3:nodoattivarpt"]) {
+      const nodoAttivaRPT = soapRequest["ppt:nodoattivarpt"] ? soapRequest["ppt:nodoattivarpt"][0] : soapRequest["ns3:nodoattivarpt"][0];
       const password = nodoAttivaRPT.password[0];
 
       if (password !== config.PAGOPA_PROXY.PASSWORD) {
