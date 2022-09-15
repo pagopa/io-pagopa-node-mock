@@ -6,4 +6,5 @@ coverage
 .vscode
 src/generated
 .DS_Store
+.eslintcache
 

@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node dist/index.js",
-    "build": "npm-run-all -s clean generate build:*",
+    "build": "npm-run-all -s clean generate build:* lint",
     "build:tsc": "tsc",
     "build:tsc-noemit": "tsc --noemit",
     "build:cp-wsdl": "cp -r src/wsdl dist/wsdl",
