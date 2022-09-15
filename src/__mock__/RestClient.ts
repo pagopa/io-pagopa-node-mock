@@ -20,8 +20,8 @@ export class RestClient {
     closePaymentRequest: ClosePaymentRequest
   ): Promise<Either<Errors, readonly [number, ClosePaymentResponse]>> {
     const responsePromise = TE.tryCatch(
-      async () =>
-        await axios.post(
+      () =>
+        axios.post(
           this.options.basepath + "/v2/closepayment",
           closePaymentRequest
         ),
