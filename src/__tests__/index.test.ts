@@ -7,6 +7,7 @@ import * as express from "express";
 import * as E from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
 import * as http from "http";
+import {formatValidationErrors} from "io-ts-reporters";
 import waitForExpect from "wait-for-expect";
 import * as FespCdServer from "../__mock__/FespCdServer";
 import { PagamentiTelematiciPspNodoAsyncClient } from "../__mock__/PPTPortClient";
@@ -302,6 +303,7 @@ describe("closePayment", () => {
       timestampOperation: "2022-02-22T14:41:58.811+01:00",
       tipoVersamento: "QUALSIASICOSAPAY",
       totalAmount: 51.0,
+      transactionId: "99910087308786"
     });
 
     const [status, responseData] = pipe(
@@ -340,6 +342,7 @@ describe("closePayment", () => {
       timestampOperation: "2022-02-22T14:41:58.811+01:00",
       tipoVersamento: "QUALSIASICOSAPAY",
       totalAmount: 51.0,
+      transactionId: "99910087308786"
     });
 
     const [status, responseData] = pipe(
@@ -354,7 +357,7 @@ describe("closePayment", () => {
     expect(responseData.esito).toEqual("KO");
   });
 
-  it("closePayment should return NOT FOUND on appropriate mockCase", async () => {
+  it("closePayment should return UNPROCESSABLE ENTITY on appropriate mockCase", async () => {
     const config = pipe(
         Configuration.decode(CONFIG),
         E.getOrElseW(() => {
@@ -378,12 +381,13 @@ describe("closePayment", () => {
       timestampOperation: "2022-02-22T14:41:58.811+01:00",
       tipoVersamento: "QUALSIASICOSAPAY",
       totalAmount: 51.0,
+      transactionId: "99910087308786"
     });
 
     const [status, responseData] = pipe(
         response,
         E.getOrElseW(l => {
-          logger.info(l);
+          logger.info(formatValidationErrors(l));
           throw new Error("Expected `Right` on closePayment");
         })
     );

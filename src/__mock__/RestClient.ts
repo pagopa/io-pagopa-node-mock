@@ -1,6 +1,7 @@
-import axios from "axios";
+import axios, {AxiosError, AxiosResponse} from "axios";
 import { Either } from "fp-ts/lib/Either";
 import * as E from "fp-ts/lib/Either";
+import * as TE from "fp-ts/lib/TaskEither";
 import { pipe } from "fp-ts/lib/function";
 import { Errors } from "io-ts";
 import {
@@ -18,15 +19,19 @@ export class RestClient {
   public async closePayment(
     closePaymentRequest: ClosePaymentRequest
   ): Promise<Either<Errors, readonly [number, ClosePaymentResponse]>> {
-    const response = await axios.post(this.options.basepath + "/v2/closepayment", closePaymentRequest);
+    const responsePromise = TE.tryCatch(async () => await axios.post(this.options.basepath + "/v2/closepayment", closePaymentRequest), e => e);
 
-      let responseBody = response.data;
-
-      return pipe(
-        ClosePaymentResponse.decode(responseBody),
-        E.map(
-          v => [response.status, v] as readonly [number, ClosePaymentResponse]
+    return pipe(
+        responsePromise,
+        TE.orElse(e => TE.of((<AxiosError> e).response as AxiosResponse)),
+        TE.chainEitherK(response => pipe(
+            response.data,
+            ClosePaymentResponse.decode,
+            E.map(value => ({ value, status: response.status }))
+        )),
+        TE.map(
+            ({ value, status }) => [status, value] as readonly [number, ClosePaymentResponse]
         )
-    );
+    )();
   }
 }

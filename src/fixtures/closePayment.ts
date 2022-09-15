@@ -10,7 +10,8 @@ const ClosePaymentRequestOK = t.interface({
   paymentTokens: t.readonly(t.array(t.string)),
   timestampOperation: t.string,
   tipoVersamento: t.string,
-  totalAmount: t.number
+  totalAmount: t.number,
+  transactionId: t.string
 });
 
 const ClosePaymentRequestKO = t.interface({
@@ -45,7 +46,7 @@ export const closePayment = (
   req: ClosePaymentRequest
 ): readonly [ClosePaymentResponse, number] => {
   if (req.outcome === "OK") {
-    if (req.additionalPaymentInformations.mockErrorCode === "notFound") {
+    if (req.additionalPaymentInformations.mockCase === "notFound") {
       return [
         {
           descrizione: "closePayment - mock case NOT FOUND",
@@ -54,7 +55,7 @@ export const closePayment = (
         404
       ];
     } else if (
-      req.additionalPaymentInformations.mockErrorCode === "unprocessableEntity"
+      req.additionalPaymentInformations.mockCase === "unprocessableEntity"
     ) {
       return [
         {

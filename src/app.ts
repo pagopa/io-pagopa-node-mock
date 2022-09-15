@@ -21,6 +21,7 @@ import {
 } from "./utils/helper";
 import { logger } from "./utils/logger";
 import { DateFromString } from "@pagopa/ts-commons/lib/dates";
+import { formatValidationErrors } from 'io-ts-reporters'
 
 const avvisoMultiBeneficiario = new RegExp("^.*30200.*");
 const avvisoPAIbanNotConfigured = new RegExp("^.*30201.*");
