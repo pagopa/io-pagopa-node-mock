@@ -10,6 +10,6 @@ export const logger = winston.createLogger({
   transports: [new winston.transports.Console()]
 });
 
-export function disableConsoleLog(): void {
+export const disableConsoleLog = (): void => {
   logger.remove(winston.transports.Console);
-}
+};

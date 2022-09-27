@@ -1,28 +1,28 @@
+import { DateFromString } from "@pagopa/ts-commons/lib/dates";
 import { ctFaultBean_type_nfpsp } from "../generated/nodeForPsp/ctFaultBean_type_nfpsp";
 import { stAmount_type_nfpsp } from "../generated/nodeForPsp/stAmount_type_nfpsp";
 import { faultBean_type_ppt } from "../generated/PagamentiTelematiciPspNodoservice/faultBean_type_ppt";
 import { nodoTipoDatiPagamentoPSP_type_ppt } from "../generated/PagamentiTelematiciPspNodoservice/nodoTipoDatiPagamentoPSP_type_ppt";
-import { DateFromString } from "@pagopa/ts-commons/lib/dates";
 
 type MockResponse = readonly [number, string];
 
 interface INodoRPTRequest {
-  esito: "OK" | "KO";
-  datiPagamento?: nodoTipoDatiPagamentoPSP_type_ppt;
-  fault?: faultBean_type_ppt;
+  readonly esito: "OK" | "KO";
+  readonly datiPagamento?: nodoTipoDatiPagamentoPSP_type_ppt;
+  readonly fault?: faultBean_type_ppt;
 }
 
 interface IVerifyPaymentNoticeReq {
-  outcome: "OK" | "KO";
-  fault?: ctFaultBean_type_nfpsp;
-  amount?: stAmount_type_nfpsp;
-  dueDate?: DateFromString;
+  readonly outcome: "OK" | "KO";
+  readonly fault?: ctFaultBean_type_nfpsp;
+  readonly amount?: stAmount_type_nfpsp;
+  readonly dueDate?: DateFromString;
 }
 
 interface IActivateIOPaymentReq {
-  outcome: "OK" | "KO";
-  fault?: ctFaultBean_type_nfpsp;
-  amount?: stAmount_type_nfpsp;
+  readonly outcome: "OK" | "KO";
+  readonly fault?: ctFaultBean_type_nfpsp;
+  readonly amount?: stAmount_type_nfpsp;
 }
 export const NodoAttivaRPT = (params: INodoRPTRequest): MockResponse => [
   200,
