@@ -133,7 +133,7 @@ export const VerifyPaymentNoticeResponse = (
 ];
 
 export const activateIOPaymenResponse = (
-  params: IActivateIOPaymentReq
+  _params: IActivateIOPaymentReq
 ): MockResponse => [
   200,
   `<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
@@ -152,8 +152,7 @@ export const activateIOPaymenResponse = (
  `
 ];
 
-export const activatePaymenNoticeResponse = (
-): MockResponse => [
+export const activatePaymenNoticeResponse = (): MockResponse => [
   200,
   `<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns="http://pagopa-api.pagopa.gov.it/node/nodeForIO.xsd">
    <soapenv:Body>
