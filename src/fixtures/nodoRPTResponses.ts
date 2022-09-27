@@ -31,8 +31,8 @@ export const NodoAttivaRPT = (params: INodoRPTRequest): MockResponse => [
 <s:Body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xmlns:xsd="http://www.w3.org/2001/XMLSchema"
         xmlns:ppt="http://ws.pagamenti.telematici.gov/">
-  <nodoAttivaRPTRisposta>
-    <ppt:nodoAttivaRPTRisposta>
+  <ppt:nodoAttivaRPTRisposta>
+    <nodoAttivaRPTRisposta>
       <esito>${params.esito}</esito>
       ${
         params.datiPagamento
@@ -55,8 +55,8 @@ export const NodoAttivaRPT = (params: INodoRPTRequest): MockResponse => [
       </fault>`
           : ""
       }
-    </ppt:nodoAttivaRPTRisposta>
-  </nodoAttivaRPTRisposta>
+    </nodoAttivaRPTRisposta>
+  </ppt:nodoAttivaRPTRisposta>
 </s:Body>
 </s:Envelope>`
 ];
@@ -68,8 +68,8 @@ export const NodoVerificaRPT = (params: INodoRPTRequest): MockResponse => [
 <s:Body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xmlns:xsd="http://www.w3.org/2001/XMLSchema"
         xmlns:ppt="http://ws.pagamenti.telematici.gov/">
-  <nodoVerificaRPTRisposta>
-    <ppt:nodoVerificaRPTRisposta>
+  <ppt:nodoVerificaRPTRisposta>
+    <nodoVerificaRPTRisposta>
       <esito>${params.esito}</esito>
       ${
         params.datiPagamento
@@ -100,8 +100,8 @@ export const NodoVerificaRPT = (params: INodoRPTRequest): MockResponse => [
       </fault>`
           : ""
       }
-    </ppt:nodoVerificaRPTRisposta>
-  </nodoVerificaRPTRisposta>
+    </nodoVerificaRPTRisposta>
+  </ppt:nodoVerificaRPTRisposta>
 </s:Body>
 </s:Envelope>`
 ];
@@ -110,65 +110,61 @@ export const VerifyPaymentNoticeResponse = (
   params: IVerifyPaymentNoticeReq
 ): MockResponse => [
   200,
-  `<s:Envelope xmlns:tns="http://pagopa-api.pagopa.gov.it/node/nodeForPsp.wsdl" 
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-  xmlns:nfpsp="http://pagopa-api.pagopa.gov.it/node/nodeForPsp.xsd" 
-  xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
-  <s:Body>
-    <nfpsp:verifyPaymentNoticeRes>
-      <outcome>${params.outcome}</outcome>
-      ${
-        params.amount
-          ? // tslint:disable-next-line: no-nested-template-literals
-            `<paymentList>
-        <paymentOptionDescription>
-          <amount>${params.amount}</amount>
-          <options>EQ</options>
-          <paymentNote>test</paymentNote>
-          <dueDate>${params.dueDate}</dueDate>
-        </paymentOptionDescription>
-        <paymentOptionDescription/>
-      </paymentList>
-      <paymentDescription>Pagamento di Test</paymentDescription>
-      <fiscalCodePA>12345678901</fiscalCodePA>
-      <companyName>companyName</companyName>
-      <officeName>officeName</officeName>`
-          : ""
-      }      
-      ${
-        params.fault
-          ? // tslint:disable-next-line: no-nested-template-literals
-            `<fault>
-        <faultCode>${params.fault.faultCode}</faultCode>
-        <faultString>${params.fault.faultString}</faultString>
-        <id>${params.fault.id}</id>
-        <description>${params.fault.description}</description>
-      </fault>`
-          : ""
-      }
-    </nfpsp:verifyPaymentNoticeRes>
-  </s:Body>
-</s:Envelope> `
+  `<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+  <soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:nfpsp="http://pagopa-api.pagopa.gov.it/node/nodeForPsp.xsd" xmlns:tns="http://pagopa-api.pagopa.gov.it/node/nodeForPsp.wsdl">
+    <soapenv:Body>
+      <nfpsp:verifyPaymentNoticeRes>
+        <outcome>OK</outcome>
+        <paymentList>
+          <paymentOptionDescription>
+            <amount>17.00</amount>
+            <options>EQ</options>
+            <dueDate>${params.dueDate}</dueDate>
+            <paymentNote>/RFB/349192200032537944/17.00/TXT/Reversale W14680/2022 CF: INCIDENTI  STRADALI||||</paymentNote>
+          </paymentOptionDescription>
+        </paymentList>
+        <paymentDescription>Reversale W14680/2022 CF: INCIDENTI  STRADALI||||</paymentDescription>
+        <fiscalCodePA>02438750586</fiscalCodePA>
+        <companyName>Roma Capitale</companyName>
+        <officeName>CORPO DI POLIZIA LOCALE DI ROMA CAPITALE</officeName>
+      </nfpsp:verifyPaymentNoticeRes>
+    </soapenv:Body>
+  </soapenv:Envelope>`
 ];
 
 export const activateIOPaymenResponse = (
-  params: IActivateIOPaymentReq
+  _params: IActivateIOPaymentReq
 ): MockResponse => [
   200,
-  `<s:Envelope xmlns:tns="http://pagopa-api.pagopa.gov.it/node/nodeForPsp.wsdl" 
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-  xmlns:nfpsp="http://pagopa-api.pagopa.gov.it/node/nodeForPsp.xsd" 
-  xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
-  <s:Body>
+  `<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+  <soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:nfpsp="http://pagopa-api.pagopa.gov.it/node/nodeForIO.xsd">
+   <soapenv:Body>
     <nfpsp:activateIOPaymentRes>
-      <outcome>${params.outcome}</outcome>
-      <totalAmount>30.00</totalAmount>
-      <paymentDescription>test</paymentDescription>
-      <fiscalCodePA>77777777777</fiscalCodePA>
-      <companyName>company EC</companyName>
-      <officeName>office EC</officeName>
-      <paymentToken>c110729d258c4ab1b765fe902aae41d6</paymentToken>
+     <outcome>OK</outcome>
+     <totalAmount>100.00</totalAmount>
+     <paymentDescription>Quota Albo Ordine Giornalisti 2022</paymentDescription>
+     <fiscalCodePA>80017010721</fiscalCodePA>
+     <paymentToken>4d500e9908714202b55751ed6b1dfdf3</paymentToken>
+     <creditorReferenceId>01225090200079679</creditorReferenceId>
     </nfpsp:activateIOPaymentRes>
-  </s:Body>
-</s:Envelope> `
+   </soapenv:Body>
+  </soapenv:Envelope>
+ `
+];
+
+export const activatePaymenNoticeResponse = (): MockResponse => [
+  200,
+  `<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns="http://pagopa-api.pagopa.gov.it/node/nodeForIO.xsd">
+   <soapenv:Body>
+    <ns:activatePaymentNoticeRes>
+     <outcome>OK</outcome>
+     <totalAmount>100.00</totalAmount>
+     <paymentDescription>Quota Albo Ordine Giornalisti 2022</paymentDescription>
+     <fiscalCodePA>80017010721</fiscalCodePA>
+     <paymentToken>4d500e9908714202b55751ed6b1dfdf3</paymentToken>
+     <creditorReferenceId>01225090200079679</creditorReferenceId>
+    </ns:activatePaymentNoticeRes>
+   </soapenv:Body>
+  </soapenv:Envelope>
+ `
 ];

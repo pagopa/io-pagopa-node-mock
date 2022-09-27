@@ -10,6 +10,7 @@ import { CONFIG, Configuration } from "./config";
 import { closePayment, ClosePaymentRequest } from "./fixtures/closePayment";
 import {
   activateIOPaymenResponse,
+  activatePaymenNoticeResponse,
   NodoAttivaRPT,
   NodoVerificaRPT,
   VerifyPaymentNoticeResponse
@@ -40,13 +41,17 @@ export const newExpressApp = async (
   app.use(bodyParserXml({}));
 
   // SOAP Server mock entrypoint
+  // eslint-disable-next-line max-lines-per-function, sonarjs/cognitive-complexity
   app.post(config.NODO_MOCK.ROUTES.PPT_NODO, async (req, res) => {
     const soapRequest = req.body["soap:envelope"]["soap:body"][0];
     logger.info("Rx request : ");
     logger.info(soapRequest);
     // The SOAP request is a NodoAttivaRPT request
-    if (soapRequest["ppt:nodoattivarpt"]) {
-      const nodoAttivaRPT = soapRequest["ppt:nodoattivarpt"][0];
+    // eslint-disable-next-line sonarjs/no-duplicate-string
+    if (soapRequest["ppt:nodoattivarpt"] || soapRequest["ns3:nodoattivarpt"]) {
+      const nodoAttivaRPT = soapRequest["ppt:nodoattivarpt"]
+        ? soapRequest["ppt:nodoattivarpt"][0]
+        : soapRequest["ns3:nodoattivarpt"][0];
       const password = nodoAttivaRPT.password[0];
 
       if (password !== config.PAGOPA_PROXY.PASSWORD) {
@@ -63,8 +68,11 @@ export const newExpressApp = async (
           .send(nodoAttivaErrorResponse[1]);
       }
 
-      const iuv =
-        nodoAttivaRPT.codiceidrpt[0]["qrc:qrcode"][0]["qrc:codiuv"][0];
+      // eslint-disable-next-line sonarjs/no-duplicate-string
+      const iuv = nodoAttivaRPT.codiceidrpt[0]["qrc:qrcode"]
+        ? nodoAttivaRPT.codiceidrpt[0]["qrc:qrcode"][0]["qrc:codiuv"][0]
+        : nodoAttivaRPT.codiceidrpt[0].qrcode[0].codiuv[0];
+
       const isIuvMultiBeneficiario = avvisoMultiBeneficiario.test(iuv);
 
       logger.info(`nodoattivarpt IUV ${iuv}`);
@@ -125,10 +133,19 @@ export const newExpressApp = async (
         .send(nodoAttivaSuccessResponse[1]);
     }
     // The SOAP request is a NodoVerificaRPT request
-    if (soapRequest["ppt:nodoverificarpt"]) {
-      const nodoVerificaRPT = soapRequest["ppt:nodoverificarpt"][0];
-      const iuv =
-        nodoVerificaRPT.codiceidrpt[0]["qrc:qrcode"][0]["qrc:codiuv"][0];
+    // eslint-disable-next-line no-console
+    console.log("Check SOAP request is a NodoVerificaRPT request");
+    if (
+      // eslint-disable-next-line sonarjs/no-duplicate-string
+      soapRequest["ppt:nodoverificarpt"] ||
+      soapRequest["ns3:nodoverificarpt"]
+    ) {
+      const nodoVerificaRPT = soapRequest["ppt:nodoverificarpt"]
+        ? soapRequest["ppt:nodoverificarpt"][0]
+        : soapRequest["ns3:nodoverificarpt"][0];
+      const iuv = nodoVerificaRPT.codiceidrpt[0]["qrc:qrcode"]
+        ? nodoVerificaRPT.codiceidrpt[0]["qrc:qrcode"][0]["qrc:codiuv"][0]
+        : nodoVerificaRPT.codiceidrpt[0].qrcode[0].codiuv[0];
       logger.info(`nodoverificarpt IUV ${iuv}`);
       const isIuvMultiBeneficiario = avvisoMultiBeneficiario.test(iuv);
       const isIuvPAIbanNotConfigured = avvisoPAIbanNotConfigured.test(iuv);
@@ -183,12 +200,16 @@ export const newExpressApp = async (
         datiPagamento: { importoSingoloVersamento },
         esito: "OK"
       });
+      logger.info(nodoVerificaSuccessResponse);
       return res
         .status(nodoVerificaSuccessResponse[0])
         .send(nodoVerificaSuccessResponse[1]);
     }
     // The SOAP request is a verifypaymentnoticereq request
-    if (soapRequest["nfpsp:verifypaymentnoticereq"]) {
+    if (
+      soapRequest["nfpsp:verifypaymentnoticereq"] ||
+      soapRequest["ns2:verifypaymentnoticereq"]
+    ) {
       const amountNotice = "2.00";
       const verifyPaymentNoticeRes = VerifyPaymentNoticeResponse({
         amount: +amountNotice,
@@ -215,6 +236,10 @@ export const newExpressApp = async (
         outcome: "OK"
       });
       return res.status(activateIOPaymenRes[0]).send(activateIOPaymenRes[1]);
+    }
+    if (soapRequest["ns2:activatepaymentnoticereq"]) {
+      const activatePaymenRes = activatePaymenNoticeResponse();
+      return res.status(activatePaymenRes[0]).send(activatePaymenRes[1]);
     }
     // The SOAP Request not implemented
     res.status(404).send("Not found");
