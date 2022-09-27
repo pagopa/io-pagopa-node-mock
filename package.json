@@ -61,7 +61,7 @@
     "io-ts-reporters": "^2.0.1",
     "morgan": "^1.10.0",
     "soap": "^0.27.1",
-    "undici": "^5.5.1",
+    "undici": "^5.8.2",
     "winston": "^3.2.1"
   },
   "jest": {
