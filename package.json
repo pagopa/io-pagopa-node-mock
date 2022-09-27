@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node dist/index.js",
-    "build": "npm-run-all -s clean generate build:*",
+    "build": "npm-run-all -s clean generate build:* lint",
     "build:tsc": "tsc",
     "build:tsc-noemit": "tsc --noemit",
     "build:cp-wsdl": "cp -r src/wsdl dist/wsdl",
@@ -58,6 +58,7 @@
     "express-xml-bodyparser": "^0.3.0",
     "fp-ts": "^2.12.1",
     "io-ts": "^2.2.16",
+    "io-ts-reporters": "^2.0.1",
     "morgan": "^1.10.0",
     "soap": "^0.27.1",
     "undici": "^5.5.1",

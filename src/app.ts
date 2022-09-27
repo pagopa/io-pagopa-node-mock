@@ -1,10 +1,11 @@
-import {IWithinRangeNumberTag} from "@pagopa/ts-commons/lib/numbers";
+import { IWithinRangeNumberTag } from "@pagopa/ts-commons/lib/numbers";
 import * as express from "express";
 import * as bodyParserXml from "express-xml-bodyparser";
 import * as E from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
 import { IWithinRangeStringTag } from "@pagopa/ts-commons/lib/strings";
 import * as morgan from "morgan";
+import { DateFromString } from "@pagopa/ts-commons/lib/dates";
 import { CONFIG, Configuration } from "./config";
 import { closePayment, ClosePaymentRequest } from "./fixtures/closePayment";
 import {
@@ -21,15 +22,14 @@ import {
   PPT_MULTI_BENEFICIARIO
 } from "./utils/helper";
 import { logger } from "./utils/logger";
-import { DateFromString } from "@pagopa/ts-commons/lib/dates";
 
 const avvisoMultiBeneficiario = new RegExp("^.*30200.*");
 const avvisoPAIbanNotConfigured = new RegExp("^.*30201.*");
 
-// tslint:disable-next-line:cognitive-complexity
-export async function newExpressApp(
+// eslint-disable-next-line max-lines-per-function
+export const newExpressApp = async (
   config: Configuration
-): Promise<Express.Application> {
+): Promise<Express.Application> => {
   const app = express();
   app.set("port", config.NODO_MOCK.PORT);
   const loggerFormat =
@@ -180,7 +180,9 @@ export async function newExpressApp(
           .status(nodoVerificaErrorResponse[0])
           .send(nodoVerificaErrorResponse[1]);
       }
-      const importoSingoloVersamento = 1.00 as 99999999.99 | (number & IWithinRangeNumberTag<0, 99999999.99>);
+      const importoSingoloVersamento = 1.0 as
+        | 99999999.99
+        | (number & IWithinRangeNumberTag<0, 99999999.99>);
       const nodoVerificaSuccessResponse = NodoVerificaRPT({
         datiPagamento: { importoSingoloVersamento },
         esito: "OK"
@@ -195,8 +197,11 @@ export async function newExpressApp(
       const amountNotice = "2.00";
       const verifyPaymentNoticeRes = VerifyPaymentNoticeResponse({
         amount: +amountNotice,
-        outcome: "OK",
-        dueDate: pipe(DateFromString.decode("2025-07-31"), E.getOrElseW(_ => undefined))
+        dueDate: pipe(
+          DateFromString.decode("2025-07-31"),
+          E.getOrElseW(_ => undefined)
+        ),
+        outcome: "OK"
       });
       return res
         .status(verifyPaymentNoticeRes[0])
@@ -229,21 +234,19 @@ export async function newExpressApp(
     res.status(404).send("Not found");
   });
 
-  app.post("/v2/closepayment", async (req, res) => {
-    return pipe(
-        ClosePaymentRequest.decode(req.body),
-        E.map(closePayment),
-        E.map(([response, status]) => {
-          return res.status(status).json(response);
-        }),
-        E.mapLeft(errors => {
-          logger.error(errors);
-          return res
-              .status(400)
-              .json({ descrizione: "closePayment: bad request", esito: "KO" });
-        })
-    );
-  });
+  app.post("/v2/closepayment", async (req, res) =>
+    pipe(
+      ClosePaymentRequest.decode(req.body),
+      E.map(closePayment),
+      E.map(([response, status]) => res.status(status).json(response)),
+      E.mapLeft(errors => {
+        logger.error(errors);
+        return res
+          .status(400)
+          .json({ descrizione: "closePayment: bad request", esito: "KO" });
+      })
+    )
+  );
 
   return app;
-}
+};

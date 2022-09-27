@@ -10,20 +10,18 @@ import { stText35_type_pay_i } from "./generated/PagamentiTelematiciPspNodoservi
 const localhost = "http://localhost";
 
 export const CONFIG = {
-  // The log level used for Winston logger (error, info, debug)
-  WINSTON_LOG_LEVEL: process.env.WINSTON_LOG_LEVEL || "debug",
-
   // RESTful Webservice configuration
   // These information are documented here:
   // https://docs.google.com/document/d/1Qqe6mSfon-blHzc-ldeEHmzIkVaElKY5LtDnKiLbk80/edit
   // Used to expose services
   NODO_MOCK: {
-    HOST: process.env.PAGOPA_NODO_HOST || localhost,
-    PORT: process.env.PORT || 3000,
-
     // SHA256 client certificate fingerprint (without `:` separators)
     CLIENT_CERTIFICATE_FINGERPRINT:
       process.env.PAGOPAPROXY_CLIENT_CERTIFICATE_FINGERPRINT,
+
+    HOST: process.env.PAGOPA_NODO_HOST || localhost,
+    PORT: process.env.PORT || 3000,
+
     ROUTES: {
       PPT_NODO: "/webservices/pof/PagamentiTelematiciPspNodoservice"
     }
@@ -31,15 +29,10 @@ export const CONFIG = {
 
   // PagoPA Proxy Configuration
   PAGOPA_PROXY: {
+    CERT: process.env.PAGOPA_CERT,
     CLIENT_TIMEOUT_MSEC: Number(process.env.PAGOPA_TIMEOUT_MSEC) || 60000,
     HOST: process.env.PAGOPA_PROXY_HOST || localhost,
     HOST_HEADER: process.env.PAGOPA_HOST_HEADER,
-
-    CERT: process.env.PAGOPA_CERT,
-    KEY: process.env.PAGOPA_KEY,
-
-    PASSWORD: process.env.PAGOPA_NODO_PASSWORD || "password",
-
     // These information will identify our system when it will access to PagoPA
     IDENTIFIER: {
       IDENTIFICATIVO_CANALE: process.env.PAGOPA_ID_CANALE || "1",
@@ -48,11 +41,19 @@ export const CONFIG = {
       IDENTIFICATIVO_INTERMEDIARIO_PSP: process.env.PAGOPA_ID_INT_PSP || "1",
       IDENTIFICATIVO_PSP: process.env.PAGOPA_ID_PSP || "1"
     },
+    KEY: process.env.PAGOPA_KEY,
+
+    PASSWORD: process.env.PAGOPA_NODO_PASSWORD || "password",
+
     PORT: process.env.PAGOPA_PROXY_PORT || 3001,
+
     WS_SERVICES: {
       FESP_CD: process.env.PAGOPA_WS_URI || "/FespCdService"
     }
-  }
+  },
+
+  // The log level used for Winston logger (error, info, debug)
+  WINSTON_LOG_LEVEL: process.env.WINSTON_LOG_LEVEL || "debug"
 };
 
 // Configuration validator - Define configuration types and interfaces
@@ -95,9 +96,8 @@ export const PagoPAProxyConfig = t.intersection([
   }),
   t.partial({
     CERT: NonEmptyString,
-    KEY: NonEmptyString,
-
-    HOST_HEADER: t.string
+    HOST_HEADER: t.string,
+    KEY: NonEmptyString
   })
 ]);
 export type PagoPAProxyConfig = t.TypeOf<typeof PagoPAProxyConfig>;

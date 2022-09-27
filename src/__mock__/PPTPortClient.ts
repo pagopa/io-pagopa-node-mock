@@ -17,23 +17,23 @@ export const PAGAMENTI_TELEMATICI_PSP_WSDL_PATH = `${__dirname}/../wsdl/NodoPerP
 
 /**
  * Create a client for PagamentiTelematiciPspNodo SOAP service
+ *
  * @param {soap.IOptions} options - Soap options
  * @return {Promise<soap.Client & IPPTPortSoap>} Soap client created
  */
-export function createPagamentiTelematiciPspNodoClient(
+export const createPagamentiTelematiciPspNodoClient = (
   options: soap.IOptions,
   cert?: string,
   key?: string,
   hostHeader?: string
-): Promise<soap.Client & IPPTPortSoap> {
-  return createClient<IPPTPortSoap>(
+): Promise<soap.Client & IPPTPortSoap> =>
+  createClient<IPPTPortSoap>(
     PAGAMENTI_TELEMATICI_PSP_WSDL_PATH,
     options,
     cert,
     key,
     hostHeader
   );
-}
 
 /**
  * Converts the callback based methods of a PagamentiTelematiciPspNodo client to
@@ -41,12 +41,15 @@ export function createPagamentiTelematiciPspNodoClient(
  */
 export class PagamentiTelematiciPspNodoAsyncClient {
   public readonly nodoVerificaRPT = promisifySoapMethod(
+    // eslint-disable-next-line no-invalid-this
     this.client.nodoVerificaRPT
   );
 
   constructor(private readonly client: IPPTPortSoap) {}
 
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   public readonly nodoAttivaRPT = (args: nodoAttivaRPT_element_ppt) =>
+    // eslint-disable-next-line no-invalid-this
     promisifySoapMethod(this.client.nodoAttivaRPT)(args, {
       postProcess: fixImportoSingoloVersamentoDigits
     });

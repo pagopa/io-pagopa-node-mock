@@ -2,7 +2,6 @@
  * Handler interface for PPTPortType SOAP Endpoint
  */
 
-// tslint:disable:no-any
 import { nodoAttivaRPT_element_ppt } from "../generated/PagamentiTelematiciPspNodoservice/nodoAttivaRPT_element_ppt";
 import { nodoAttivaRPTRisposta_element_ppt } from "../generated/PagamentiTelematiciPspNodoservice/nodoAttivaRPTRisposta_element_ppt";
 import { nodoVerificaRPT_element_ppt } from "../generated/PagamentiTelematiciPspNodoservice/nodoVerificaRPT_element_ppt";

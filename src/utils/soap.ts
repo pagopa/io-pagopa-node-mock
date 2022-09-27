@@ -7,23 +7,22 @@ import * as soap from "soap";
 export type SoapMethodCB<I, O> = (
   input: I,
   cb: (
-    // tslint:disable-next-line: no-any
-    err: any,
+    err: unknown,
     result: O,
     raw: string,
-    // tslint:disable-next-line: no-any
-    soapHeader: { readonly [k: string]: any }
+    soapHeader: { readonly [k: string]: unknown }
   ) => unknown,
   options?: Pick<soap.ISecurity, "postProcess">
 ) => void;
 
 /**
  * Retrieve wsdl file content
+ *
  * @param {NonEmptyString} path - WSDL file path
  * @return {Promise<string>} WSDL file content
  */
-export async function readWsdl(path: NonEmptyString): Promise<string> {
-  return new Promise<string>((resolve, reject) => {
+export const readWsdl = async (path: NonEmptyString): Promise<string> =>
+  new Promise<string>((resolve, reject) => {
     fs.readFile(path, { encoding: "utf8" }, (err, wsdl) => {
       if (err) {
         return reject(err);
@@ -31,16 +30,15 @@ export async function readWsdl(path: NonEmptyString): Promise<string> {
       resolve(wsdl.replace(/(\r\n|\n|\r)/gm, ""));
     });
   });
-}
 
-export function createClient<T>(
+export const createClient = <T>(
   wsdlUri: string,
   options: soap.IOptions,
   cert?: string,
   key?: string,
   hostHeader?: string
-): Promise<soap.Client & T> {
-  return new Promise((resolve, reject) => {
+): Promise<soap.Client & T> =>
+  new Promise((resolve, reject) => {
     soap.createClient(wsdlUri, options, (err, client) => {
       if (err) {
         reject(err);
@@ -58,11 +56,11 @@ export function createClient<T>(
       }
     });
   });
-}
 
 /**
  * Converts a SoapMethodCB into a SoapMethodPromise
  */
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const promisifySoapMethod = <I, O>(f: SoapMethodCB<I, O>) => (
   input: I,
   options?: Pick<soap.ISecurity, "postProcess">
