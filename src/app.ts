@@ -261,7 +261,6 @@ export const newExpressApp = async (
 
   app.get("/nodo-per-pm/v1/informazioniPagamento", async (req, res) =>
     res.status(200).json({
-      IBAN: "IT96R0123451234512345678904",
       bolloDigitale: false,
       codiceFiscale: "RCCGLD09P09H502E",
       dettagli: [
