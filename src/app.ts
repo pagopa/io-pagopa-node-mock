@@ -260,32 +260,34 @@ export const newExpressApp = async (
   );
 
   app.get("/nodo-per-pm/v1/informazioniPagamento", async (req, res) =>
-    res.send(
-      JSON.stringify({
-        IBAN: "IT96R0123451234512345678904",
-        bolloDigitale: false,
-        codiceFiscale: "RCCGLD09P09H502E",
-        dettagli: [
-          {
-            CCP: "35727",
-            IUV: "11000554726628192",
-            codicePagatore: "RCCGLD09P09H501E",
-            enteBeneficiario: "AZIENDA XXX",
-            idDominio: "11111111111",
-            importo: 11.0,
-            nomePagatore: "Gesualdo;Riccitelli",
-            tipoPagatore: "F"
-          }
-        ],
-        email: "gesualdo.riccitelli@poste.it",
-        importoTotale: 11.0,
-        oggettoPagamento:
-          "RFB/11000554726628192/11.00/TXT/pagamento/RPT/by/mock",
-        ragioneSociale: "Pa per tutti",
-        urlRedirectEC:
-          "http://localhost:81/pa?qstr=/prova&idSession=737b6191-6d48-43a5-99ea-0e1b2d2d3cea&idDominio=11111111111"
-      })
-    )
+    res
+      .send(
+        JSON.stringify({
+          IBAN: "IT96R0123451234512345678904",
+          bolloDigitale: false,
+          codiceFiscale: "RCCGLD09P09H502E",
+          dettagli: [
+            {
+              CCP: "35727",
+              IUV: "11000554726628192",
+              codicePagatore: "RCCGLD09P09H501E",
+              enteBeneficiario: "AZIENDA XXX",
+              idDominio: "11111111111",
+              importo: 11.0,
+              nomePagatore: "Gesualdo;Riccitelli",
+              tipoPagatore: "F"
+            }
+          ],
+          email: "gesualdo.riccitelli@poste.it",
+          importoTotale: 11.0,
+          oggettoPagamento:
+            "RFB/11000554726628192/11.00/TXT/pagamento/RPT/by/mock",
+          ragioneSociale: "Pa per tutti",
+          urlRedirectEC:
+            "http://localhost:81/pa?qstr=/prova&idSession=737b6191-6d48-43a5-99ea-0e1b2d2d3cea&idDominio=11111111111"
+        })
+      )
+      .setHeader("Content-Type", "application/json")
   );
 
   return app;
