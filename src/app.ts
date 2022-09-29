@@ -262,20 +262,16 @@ export const newExpressApp = async (
   app.get("/nodo-per-pm/v1/informazioniPagamento", async (req, res) =>
     res.status(200).json({
       bolloDigitale: false,
-      codiceFiscale: "RCCGLD09P09H502E",
+      codiceFiscale: "RUUGLD09P09H592E",
       dettagli: [
         {
           CCP: "35727",
           IUV: "11000554726628192",
-          codicePagatore: "RCCGLD09P09H501E",
           enteBeneficiario: "AZIENDA XXX",
           idDominio: "11111111111",
-          importo: 11.0,
-          nomePagatore: "Gesualdo;Riccitelli",
-          tipoPagatore: "F"
         }
       ],
-      email: "gesualdo.riccitelli@poste.it",
+      email: "gesualdo.test@test.it",
       importoTotale: 11.0,
       oggettoPagamento: "RFB/11000554726628192/11.00/TXT/pagamento/RPT/by/mock",
       ragioneSociale: "Pa per tutti",
