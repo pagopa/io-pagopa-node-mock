@@ -268,7 +268,7 @@ export const newExpressApp = async (
           CCP: "35727",
           IUV: "11000554726628192",
           enteBeneficiario: "AZIENDA XXX",
-          idDominio: "11111111111",
+          idDominio: "11111111111"
         }
       ],
       email: "gesualdo.test@test.it",
