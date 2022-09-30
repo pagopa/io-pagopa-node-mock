@@ -295,13 +295,13 @@ describe("closePayment", () => {
     const response = await restClient.closePayment({
       additionalPaymentInformations: {},
       fee: 1.0,
-      identificativoCanale: "13212880160_02",
-      identificativoIntermediario: "13212880160",
-      identificativoPsp: "CIPBITMM",
+      idChannel: "13212880160_02",
+      idBrokerPSP: "13212880160",
+      idPSP: "CIPBITMM",
       outcome: "OK",
       paymentTokens: ["8b13913acff44b559ed2e6e74cd93c17"],
       timestampOperation: "2022-02-22T14:41:58.811+01:00",
-      tipoVersamento: "QUALSIASICOSAPAY",
+      paymentMethod: "QUALSIASICOSAPAY",
       totalAmount: 51.0,
       transactionId: "99910087308786"
     });
@@ -315,7 +315,7 @@ describe("closePayment", () => {
     );
 
     expect(status).toEqual(200);
-    expect(responseData.esito).toEqual("OK");
+    expect(responseData.outcome).toEqual("OK");
   });
 
   it("closePayment should return NOT FOUND on appropriate mockCase", async () => {
@@ -334,13 +334,13 @@ describe("closePayment", () => {
         mockCase: "notFound"
       },
       fee: 1.0,
-      identificativoCanale: "13212880160_02",
-      identificativoIntermediario: "13212880160",
-      identificativoPsp: "CIPBITMM",
+      idChannel: "13212880160_02",
+      idBrokerPSP: "13212880160",
+      idPSP: "CIPBITMM",
       outcome: "OK",
       paymentTokens: ["8b13913acff44b559ed2e6e74cd93c17"],
       timestampOperation: "2022-02-22T14:41:58.811+01:00",
-      tipoVersamento: "QUALSIASICOSAPAY",
+      paymentMethod: "QUALSIASICOSAPAY",
       totalAmount: 51.0,
       transactionId: "99910087308786"
     });
@@ -354,7 +354,7 @@ describe("closePayment", () => {
     );
 
     expect(status).toEqual(404);
-    expect(responseData.esito).toEqual("KO");
+    expect(responseData.outcome).toEqual("KO");
   });
 
   it("closePayment should return UNPROCESSABLE ENTITY on appropriate mockCase", async () => {
@@ -373,13 +373,13 @@ describe("closePayment", () => {
         mockCase: "unprocessableEntity"
       },
       fee: 1.0,
-      identificativoCanale: "13212880160_02",
-      identificativoIntermediario: "13212880160",
-      identificativoPsp: "CIPBITMM",
+      idChannel: "13212880160_02",
+      idBrokerPSP: "13212880160",
+      idPSP: "CIPBITMM",
       outcome: "OK",
       paymentTokens: ["8b13913acff44b559ed2e6e74cd93c17"],
       timestampOperation: "2022-02-22T14:41:58.811+01:00",
-      tipoVersamento: "QUALSIASICOSAPAY",
+      paymentMethod: "QUALSIASICOSAPAY",
       totalAmount: 51.0,
       transactionId: "99910087308786"
     });
@@ -393,6 +393,6 @@ describe("closePayment", () => {
     );
 
     expect(status).toEqual(422);
-    expect(responseData.esito).toEqual("KO");
+    expect(responseData.outcome).toEqual("KO");
   });
 });

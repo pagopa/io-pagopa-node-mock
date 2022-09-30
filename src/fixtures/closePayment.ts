@@ -3,13 +3,13 @@ import * as t from "io-ts";
 const ClosePaymentRequestOK = t.interface({
   additionalPaymentInformations: t.record(t.string, t.string),
   fee: t.number,
-  identificativoCanale: t.string,
-  identificativoIntermediario: t.string,
-  identificativoPsp: t.string,
+  idBrokerPSP: t.string,
+  idChannel: t.string,
+  idPSP: t.string,
   outcome: t.literal("OK"),
+  paymentMethod: t.string,
   paymentTokens: t.readonly(t.array(t.string)),
   timestampOperation: t.string,
-  tipoVersamento: t.string,
   totalAmount: t.number,
   transactionId: t.string
 });
@@ -27,12 +27,12 @@ export const ClosePaymentRequest = t.union([
 export type ClosePaymentRequest = t.TypeOf<typeof ClosePaymentRequest>;
 
 const ClosePaymentResponseOK = t.interface({
-  esito: t.literal("OK")
+  outcome: t.literal("OK")
 });
 
 const ClosePaymentResponseKO = t.interface({
-  descrizione: t.string,
-  esito: t.literal("KO")
+  description: t.string,
+  outcome: t.literal("KO")
 });
 
 export const ClosePaymentResponse = t.union([
@@ -49,8 +49,8 @@ export const closePayment = (
     if (req.additionalPaymentInformations.mockCase === "notFound") {
       return [
         {
-          descrizione: "closePayment - mock case NOT FOUND",
-          esito: "KO"
+          description: "closePayment - mock case NOT FOUND",
+          outcome: "KO"
         },
         404
       ];
@@ -59,8 +59,8 @@ export const closePayment = (
     ) {
       return [
         {
-          descrizione: "closePayment - mock case UNPROCESSABLE ENTITY",
-          esito: "KO"
+          description: "closePayment - mock case UNPROCESSABLE ENTITY",
+          outcome: "KO"
         },
         422
       ];
@@ -69,7 +69,7 @@ export const closePayment = (
 
   return [
     {
-      esito: "OK"
+      outcome: "OK"
     },
     200
   ];
