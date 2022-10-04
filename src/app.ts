@@ -6,6 +6,7 @@ import { pipe } from "fp-ts/lib/function";
 import { IWithinRangeStringTag } from "@pagopa/ts-commons/lib/strings";
 import * as morgan from "morgan";
 import { DateFromString } from "@pagopa/ts-commons/lib/dates";
+import { formatValidationErrors } from "io-ts-reporters";
 import { CONFIG, Configuration } from "./config";
 import { closePayment, ClosePaymentRequest } from "./fixtures/closePayment";
 import {
@@ -251,7 +252,7 @@ export const newExpressApp = async (
       E.map(closePayment),
       E.map(([response, status]) => res.status(status).json(response)),
       E.mapLeft(errors => {
-        logger.error(errors);
+        logger.error(formatValidationErrors(errors));
         return res
           .status(400)
           .json({ descrizione: "closePayment: bad request", esito: "KO" });
