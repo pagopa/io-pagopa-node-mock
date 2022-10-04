@@ -72,7 +72,7 @@ export const newExpressApp = async (
       // eslint-disable-next-line sonarjs/no-duplicate-string
       const iuv = nodoAttivaRPT.codiceidrpt[0]["qrc:qrcode"]
         ? nodoAttivaRPT.codiceidrpt[0]["qrc:qrcode"][0]["qrc:codiuv"][0]
-        : nodoAttivaRPT.codiceidrpt[0].qrcode[0].codiuv[0];
+        : nodoAttivaRPT.codiceidrpt[0]["ns2:qrcode"][0]["ns2:codiuv"][0];
 
       const isIuvMultiBeneficiario = avvisoMultiBeneficiario.test(iuv);
 
@@ -146,7 +146,7 @@ export const newExpressApp = async (
         : soapRequest["ns3:nodoverificarpt"][0];
       const iuv = nodoVerificaRPT.codiceidrpt[0]["qrc:qrcode"]
         ? nodoVerificaRPT.codiceidrpt[0]["qrc:qrcode"][0]["qrc:codiuv"][0]
-        : nodoVerificaRPT.codiceidrpt[0].qrcode[0].codiuv[0];
+        : nodoVerificaRPT.codiceidrpt[0]["ns2:qrcode"][0]["ns2:codiuv"][0];
       logger.info(`nodoverificarpt IUV ${iuv}`);
       const isIuvMultiBeneficiario = avvisoMultiBeneficiario.test(iuv);
       const isIuvPAIbanNotConfigured = avvisoPAIbanNotConfigured.test(iuv);
