@@ -42,17 +42,32 @@ export const newExpressApp = async (
   app.use(bodyParserXml({}));
 
   // SOAP Server mock entrypoint
-  // eslint-disable-next-line max-lines-per-function, sonarjs/cognitive-complexity
+  // eslint-disable-next-line max-lines-per-function, sonarjs/cognitive-complexity,complexity
   app.post(config.NODO_MOCK.ROUTES.PPT_NODO, async (req, res) => {
     const soapRequest = req.body["soap:envelope"]["soap:body"][0];
     logger.info("Rx request : ");
     logger.info(soapRequest);
+
+    const pptNodoattivarpt = "ppt:nodoattivarpt";
+    const ns3Nodoattivarpt = "ns3:nodoattivarpt";
+    const ns4Nodoattivarpt = "ns4:nodoattivarpt";
+
     // The SOAP request is a NodoAttivaRPT request
-    // eslint-disable-next-line sonarjs/no-duplicate-string
-    if (soapRequest["ppt:nodoattivarpt"] || soapRequest["ns3:nodoattivarpt"]) {
-      const nodoAttivaRPT = soapRequest["ppt:nodoattivarpt"]
-        ? soapRequest["ppt:nodoattivarpt"][0]
-        : soapRequest["ns3:nodoattivarpt"][0];
+    if (
+      soapRequest[pptNodoattivarpt] ||
+      soapRequest[ns3Nodoattivarpt] ||
+      soapRequest[ns4Nodoattivarpt]
+    ) {
+      // eslint-disable-next-line functional/no-let
+      let nodoAttivaRPT;
+      if (soapRequest[pptNodoattivarpt]) {
+        nodoAttivaRPT = soapRequest[pptNodoattivarpt][0];
+      } else if (soapRequest[ns3Nodoattivarpt]) {
+        nodoAttivaRPT = soapRequest[ns3Nodoattivarpt][0];
+      } else if (soapRequest[ns4Nodoattivarpt]) {
+        nodoAttivaRPT = soapRequest[ns4Nodoattivarpt][0];
+      }
+
       const password = nodoAttivaRPT.password[0];
 
       if (password !== config.PAGOPA_PROXY.PASSWORD) {
