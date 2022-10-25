@@ -261,7 +261,7 @@ export const newExpressApp = async (
     res.status(404).send("Not found");
   });
 
-  app.post("/v2/closepayment", async (req, res) =>
+  app.post("/nodo-per-pm/v2/closepayment", async (req, res) =>
     pipe(
       ClosePaymentRequest.decode(req.body),
       E.map(closePayment),

@@ -22,7 +22,7 @@ export class RestClient {
     const responsePromise = TE.tryCatch(
       () =>
         axios.post(
-          this.options.basepath + "/v2/closepayment",
+          this.options.basepath + "/nodo-per-pm/v2/closepayment",
           closePaymentRequest
         ),
       e => e
