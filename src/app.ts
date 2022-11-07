@@ -224,7 +224,7 @@ export const newExpressApp = async (
     // The SOAP request is a verifypaymentnoticereq request
     if (
       soapRequest["nfpsp:verifypaymentnoticereq"] ||
-      soapRequest["ns2:verifypaymentnoticereq"]
+      soapRequest["ns3:verifypaymentnoticereq"]
     ) {
       const amountNotice = "2.00";
       const verifyPaymentNoticeRes = VerifyPaymentNoticeResponse({
