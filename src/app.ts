@@ -154,11 +154,11 @@ export const newExpressApp = async (
     if (
       // eslint-disable-next-line sonarjs/no-duplicate-string
       soapRequest["ppt:nodoverificarpt"] ||
-      soapRequest["ns3:nodoverificarpt"]
+      soapRequest["ns4:nodoverificarpt"]
     ) {
       const nodoVerificaRPT = soapRequest["ppt:nodoverificarpt"]
         ? soapRequest["ppt:nodoverificarpt"][0]
-        : soapRequest["ns3:nodoverificarpt"][0];
+        : soapRequest["ns4:nodoverificarpt"][0];
       const iuv = nodoVerificaRPT.codiceidrpt[0]["qrc:qrcode"]
         ? nodoVerificaRPT.codiceidrpt[0]["qrc:qrcode"][0]["qrc:codiuv"][0]
         : nodoVerificaRPT.codiceidrpt[0]["ns2:qrcode"][0]["ns2:codiuv"][0];
