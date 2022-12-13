@@ -5,7 +5,8 @@ const SinglePosition = t.interface({
   noticeNumber: t.string
 });
 
-const CheckPositionRequestOK = t.interface({
+const CheckPositionRequestMock = t.interface({
+  mocktype: t.union([t.undefined, t.string]),
   positionslist: t.array(SinglePosition)
 });
 
@@ -18,7 +19,7 @@ const CheckPositionResponseKO = t.interface({
 });
 
 const CheckPositionResponseError = t.interface({
-  error: t.literal("generic error")
+  error: t.string
 });
 
 export const CheckPositionResponse = t.union([
@@ -27,13 +28,48 @@ export const CheckPositionResponse = t.union([
   CheckPositionResponseError
 ]);
 
-export const CheckPositionRequest = CheckPositionRequestOK;
+export const CheckPositionRequest = CheckPositionRequestMock;
 export type CheckPositionRequest = t.TypeOf<typeof CheckPositionRequest>;
 export type CheckPositionResponse = t.TypeOf<typeof CheckPositionResponse>;
 
-export const checkPosition = (): readonly [CheckPositionResponse, number] => [
-  {
-    esito: "OK"
-  },
-  200
-];
+export const checkPosition = (
+  req: CheckPositionRequest
+): readonly [CheckPositionResponse, number] => {
+  if (req.mocktype === "404") {
+    return [
+      {
+        error: "404 not found"
+      },
+      404
+    ];
+  } else if (req.mocktype === "408") {
+    return [
+      {
+        error: "408 request timeout"
+      },
+      408
+    ];
+  } else if (req.mocktype === "422") {
+    return [
+      {
+        error: "422 Unprocessable entry"
+      },
+      408
+    ];
+  }
+
+  if (req.positionslist[0].noticeNumber.startsWith("3333")) {
+    return [
+      {
+        esito: "KO"
+      },
+      200
+    ];
+  }
+  return [
+    {
+      esito: "OK"
+    },
+    200
+  ];
+};
