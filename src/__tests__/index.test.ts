@@ -21,6 +21,7 @@ import { nodoAttivaRPT_element_ppt } from "../generated/PagamentiTelematiciPspNo
 import { nodoVerificaRPT_element_ppt } from "../generated/PagamentiTelematiciPspNodoservice/nodoVerificaRPT_element_ppt";
 import * as FespCdClient from "../services/pagopa_api/FespCdClient";
 import {logger} from "../utils/logger";
+import { CheckPositionResponseError, CheckPositionResponseKo, CheckPositionResponseOk } from "../fixtures/checkPosition";
 
 const sleep = (ms: number) => new Promise(ok => setTimeout(ok, ms));
 // tslint:disable-next-line: no-let
@@ -260,7 +261,7 @@ describe("Test SOAP Server", () => {
   });
 });
 
-describe("closePayment", () => {
+describe("New Node call flow", () => {
   // tslint:disable-next-line:no-identical-functions
   beforeAll(async () => {
     // Retrieve server configuration
@@ -395,4 +396,165 @@ describe("closePayment", () => {
     expect(status).toEqual(422);
     expect(responseData.outcome).toEqual("KO");
   });
+
+  it("checkPosition should return a OK response", async () => {
+    const config = pipe(
+        Configuration.decode(CONFIG),
+        E.getOrElseW(() => {
+          throw Error(`Invalid configuration.`);
+        })
+    );
+    const restClient = new RestClient({
+      basepath: `http://localhost:${config.NODO_MOCK.PORT}`
+    });
+
+    const request = await restClient.checkPosition({
+      mocktype: undefined,
+      positionslist:[
+        {
+          fiscalCode : "68289200126",
+          noticeNumber: "0000050951923271908"
+        }
+      ]
+    });
+
+    const [status,responseData] = pipe(
+      request,
+        E.getOrElseW(l => {
+          logger.info(l);
+          throw new Error("Expected `Right` on checkPosition");
+        })
+    );
+    expect((responseData as CheckPositionResponseOk).esito).toEqual("OK")
+    expect(status).toEqual(200);
+  });
+
+  it("checkPosition should return a KO response", async () => {
+    const config = pipe(
+        Configuration.decode(CONFIG),
+        E.getOrElseW(() => {
+          throw Error(`Invalid configuration.`);
+        })
+    );
+    const restClient = new RestClient({
+      basepath: `http://localhost:${config.NODO_MOCK.PORT}`
+    });
+
+    const request = await restClient.checkPosition({
+      mocktype: undefined,
+      positionslist:[
+        {
+          fiscalCode : "68289200126",
+          noticeNumber: "3333050951923271908"
+        }
+      ]
+    });
+
+    const [status,responseData] = pipe(
+      request,
+        E.getOrElseW(l => {
+          logger.info(l);
+          throw new Error("Expected `Right` on checkPosition");
+        })
+    );
+    expect((responseData as CheckPositionResponseKo).esito).toEqual("KO")
+    expect(status).toEqual(200);
+  });
+
+  it("checkPosition should return a 404 not found response", async () => {
+    const config = pipe(
+        Configuration.decode(CONFIG),
+        E.getOrElseW(() => {
+          throw Error(`Invalid configuration.`);
+        })
+    );
+    const restClient = new RestClient({
+      basepath: `http://localhost:${config.NODO_MOCK.PORT}`
+    });
+
+    const request = await restClient.checkPosition({
+      mocktype: "404",
+      positionslist:[
+        {
+          fiscalCode : "68289200126",
+          noticeNumber: "0000050951923271908"
+        }
+      ]
+    });
+
+    const [status,responseData] = pipe(
+      request,
+        E.getOrElseW(l => {
+          logger.info(l);
+          throw new Error("Expected `Right` on checkPosition");
+        })
+    );
+    expect((responseData as CheckPositionResponseError).error).toEqual("404 not found")
+    expect(status).toEqual(404);
+  });
+
+  it("checkPosition should return a 408 request timeout response", async () => {
+    const config = pipe(
+        Configuration.decode(CONFIG),
+        E.getOrElseW(() => {
+          throw Error(`Invalid configuration.`);
+        })
+    );
+    const restClient = new RestClient({
+      basepath: `http://localhost:${config.NODO_MOCK.PORT}`
+    });
+
+    const request = await restClient.checkPosition({
+      mocktype: "408",
+      positionslist:[
+        {
+          fiscalCode : "68289200126",
+          noticeNumber: "0000050951923271908"
+        }
+      ]
+    });
+
+    const [status,responseData] = pipe(
+      request,
+        E.getOrElseW(l => {
+          logger.info(l);
+          throw new Error("Expected `Right` on checkPosition");
+        })
+    );
+    expect((responseData as CheckPositionResponseError).error).toEqual("408 request timeout")
+    expect(status).toEqual(408);
+  });
+
+  it("checkPosition should return a 422 unprocessable entry response", async () => {
+    const config = pipe(
+        Configuration.decode(CONFIG),
+        E.getOrElseW(() => {
+          throw Error(`Invalid configuration.`);
+        })
+    );
+    const restClient = new RestClient({
+      basepath: `http://localhost:${config.NODO_MOCK.PORT}`
+    });
+
+    const request = await restClient.checkPosition({
+      mocktype: "422",
+      positionslist:[
+        {
+          fiscalCode : "68289200126",
+          noticeNumber: "0000050951923271908"
+        }
+      ]
+    });
+
+    const [status,responseData] = pipe(
+      request,
+        E.getOrElseW(l => {
+          logger.info(l);
+          throw new Error("Expected `Right` on checkPosition");
+        })
+    );
+    expect((responseData as CheckPositionResponseError).error).toEqual("422 unprocessable entry")
+    expect(status).toEqual(422);
+  });
+
 });

@@ -8,6 +8,10 @@ import {
   ClosePaymentRequest,
   ClosePaymentResponse
 } from "../fixtures/closePayment";
+import {
+  CheckPositionRequest,
+  CheckPositionResponse
+} from "../fixtures/checkPosition";
 
 export class RestClient {
   private readonly options: { readonly basepath: string };
@@ -41,6 +45,35 @@ export class RestClient {
       TE.map(
         ({ status, value }) =>
           [status, value] as readonly [number, ClosePaymentResponse]
+      )
+    )();
+  }
+
+  public async checkPosition(
+    checkPositionRequest: CheckPositionRequest
+  ): Promise<Either<Errors, readonly [number, CheckPositionResponse]>> {
+    const responsePromise = TE.tryCatch(
+      () =>
+        axios.post(
+          this.options.basepath + "/nodo-per-pm/v1/checkPosition",
+          checkPositionRequest
+        ),
+      e => e
+    );
+
+    return pipe(
+      responsePromise,
+      TE.orElse(e => TE.of((e as AxiosError).response as AxiosResponse)),
+      TE.chainEitherK(response =>
+        pipe(
+          response.data,
+          CheckPositionResponse.decode,
+          E.map(value => ({ status: response.status, value }))
+        )
+      ),
+      TE.map(
+        ({ status, value }) =>
+          [status, value] as readonly [number, CheckPositionResponse]
       )
     )();
   }

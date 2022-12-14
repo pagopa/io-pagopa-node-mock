@@ -9,6 +9,7 @@ import { DateFromString } from "@pagopa/ts-commons/lib/dates";
 import { formatValidationErrors } from "io-ts-reporters";
 import { CONFIG, Configuration } from "./config";
 import { closePayment, ClosePaymentRequest } from "./fixtures/closePayment";
+import { checkPosition, CheckPositionRequest } from "./fixtures/checkPosition";
 import {
   activateIOPaymenResponse,
   activatePaymenNoticeResponse,
@@ -271,6 +272,20 @@ export const newExpressApp = async (
         return res
           .status(400)
           .json({ descrizione: "closePayment: bad request", esito: "KO" });
+      })
+    )
+  );
+
+  app.post("/nodo-per-pm/v1/checkPosition", async (req, res) =>
+    pipe(
+      CheckPositionRequest.decode(req.body),
+      E.map(checkPosition),
+      E.map(([response, status]) => res.status(status).json(response)),
+      E.mapLeft(errors => {
+        logger.error(formatValidationErrors(errors));
+        return res
+          .status(400)
+          .json({ descrizione: "checkPosition: bad request", esito: "KO" });
       })
     )
   );
