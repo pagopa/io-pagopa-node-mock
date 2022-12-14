@@ -18,19 +18,30 @@ const CheckPositionResponseKO = t.interface({
   esito: t.literal("KO")
 });
 
-const CheckPositionResponseError = t.interface({
+const CheckPositionResponseERROR = t.interface({
   error: t.string
 });
 
 export const CheckPositionResponse = t.union([
   CheckPositionResponseOK,
   CheckPositionResponseKO,
-  CheckPositionResponseError
+  CheckPositionResponseERROR
 ]);
+export type CheckPositionResponse = t.TypeOf<typeof CheckPositionResponse>;
 
 export const CheckPositionRequest = CheckPositionRequestMock;
 export type CheckPositionRequest = t.TypeOf<typeof CheckPositionRequest>;
-export type CheckPositionResponse = t.TypeOf<typeof CheckPositionResponse>;
+
+export const CheckPositionResponseKo = CheckPositionResponseKO;
+export type CheckPositionResponseKo = t.TypeOf<typeof CheckPositionResponseKo>;
+
+export const CheckPositionResponseOk = CheckPositionResponseOK;
+export type CheckPositionResponseOk = t.TypeOf<typeof CheckPositionResponseOk>;
+
+export const CheckPositionResponseError = CheckPositionResponseERROR;
+export type CheckPositionResponseError = t.TypeOf<
+  typeof CheckPositionResponseError
+>;
 
 export const checkPosition = (
   req: CheckPositionRequest
@@ -52,9 +63,9 @@ export const checkPosition = (
   } else if (req.mocktype === "422") {
     return [
       {
-        error: "422 Unprocessable entry"
+        error: "422 unprocessable entry"
       },
-      408
+      422
     ];
   }
 
