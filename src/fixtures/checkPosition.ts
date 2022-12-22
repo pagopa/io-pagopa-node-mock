@@ -1,8 +1,10 @@
 import * as t from "io-ts";
 
 const SinglePosition = t.interface({
+  description: t.union([t.undefined, t.string]),
   fiscalCode: t.string,
-  noticeNumber: t.string
+  noticeNumber: t.string,
+  state: t.union([t.undefined, t.string])
 });
 
 const CheckPositionRequestMock = t.interface({
@@ -11,11 +13,13 @@ const CheckPositionRequestMock = t.interface({
 });
 
 const CheckPositionResponseOK = t.interface({
-  esito: t.literal("OK")
+  outcome: t.literal("OK"),
+  positionslist: t.array(SinglePosition)
 });
 
 const CheckPositionResponseKO = t.interface({
-  esito: t.literal("KO")
+  outcome: t.literal("KO"),
+  positionslist: t.array(SinglePosition)
 });
 
 const CheckPositionResponseERROR = t.interface({
@@ -72,14 +76,16 @@ export const checkPosition = (
   if (req.positionslist[0].noticeNumber.startsWith("3333")) {
     return [
       {
-        esito: "KO"
+        outcome: "KO",
+        positionslist: req.positionslist
       },
       200
     ];
   }
   return [
     {
-      esito: "OK"
+      outcome: "OK",
+      positionslist: req.positionslist
     },
     200
   ];
