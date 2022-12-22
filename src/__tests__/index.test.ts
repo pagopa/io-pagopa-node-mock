@@ -412,6 +412,8 @@ describe("New Node call flow", () => {
       mocktype: undefined,
       positionslist:[
         {
+          state : undefined,
+          description : undefined,
           fiscalCode : "68289200126",
           noticeNumber: "0000050951923271908"
         }
@@ -425,7 +427,7 @@ describe("New Node call flow", () => {
           throw new Error("Expected `Right` on checkPosition");
         })
     );
-    expect((responseData as CheckPositionResponseOk).esito).toEqual("OK")
+    expect((responseData as CheckPositionResponseOk).outcome).toEqual("OK")
     expect(status).toEqual(200);
   });
 
@@ -444,6 +446,8 @@ describe("New Node call flow", () => {
       mocktype: undefined,
       positionslist:[
         {
+          state : undefined,
+          description : undefined,
           fiscalCode : "68289200126",
           noticeNumber: "3333050951923271908"
         }
@@ -457,7 +461,7 @@ describe("New Node call flow", () => {
           throw new Error("Expected `Right` on checkPosition");
         })
     );
-    expect((responseData as CheckPositionResponseKo).esito).toEqual("KO")
+    expect((responseData as CheckPositionResponseKo).outcome).toEqual("KO")
     expect(status).toEqual(200);
   });
 
@@ -476,6 +480,8 @@ describe("New Node call flow", () => {
       mocktype: "404",
       positionslist:[
         {
+          state : undefined,
+          description : undefined,
           fiscalCode : "68289200126",
           noticeNumber: "0000050951923271908"
         }
@@ -508,6 +514,8 @@ describe("New Node call flow", () => {
       mocktype: "408",
       positionslist:[
         {
+          state : undefined,
+          description : undefined,
           fiscalCode : "68289200126",
           noticeNumber: "0000050951923271908"
         }
@@ -540,6 +548,8 @@ describe("New Node call flow", () => {
       mocktype: "422",
       positionslist:[
         {
+          state : undefined,
+          description : undefined,
           fiscalCode : "68289200126",
           noticeNumber: "0000050951923271908"
         }
