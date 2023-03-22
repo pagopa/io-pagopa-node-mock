@@ -1,12 +1,17 @@
 import * as t from "io-ts";
 
+enum Outcome {
+  OK = 'OK',
+  KO = 'KO'
+}
+
 const ClosePaymentRequestOK = t.interface({
   additionalPaymentInformations: t.record(t.string, t.string),
   fee: t.number,
   idBrokerPSP: t.string,
   idChannel: t.string,
   idPSP: t.string,
-  outcome: t.literal("OK"),
+  outcome: Outcome.OK,
   paymentMethod: t.string,
   paymentTokens: t.readonly(t.array(t.string)),
   timestampOperation: t.string,
@@ -14,7 +19,7 @@ const ClosePaymentRequestOK = t.interface({
 });
 
 const ClosePaymentRequestKO = t.interface({
-  outcome: t.literal("KO"),
+  outcome: Outcome.KO,
   paymentTokens: t.readonly(t.array(t.string)),
   transactionId: t.string
 });
