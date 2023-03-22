@@ -6,11 +6,12 @@ const ClosePaymentRequestOK = t.interface({
   idBrokerPSP: t.string,
   idChannel: t.string,
   idPSP: t.string,
-  outcome:  t.literal("OK"),
+  outcome: t.literal("OK"),
   paymentMethod: t.string,
   paymentTokens: t.readonly(t.array(t.string)),
   timestampOperation: t.string,
   totalAmount: t.number,
+  transactionId: t.string
 });
 
 const ClosePaymentRequestKO = t.interface({
