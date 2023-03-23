@@ -16,7 +16,8 @@ const ClosePaymentRequestOK = t.interface({
 
 const ClosePaymentRequestKO = t.interface({
   outcome: t.literal("KO"),
-  paymentTokens: t.readonly(t.array(t.string))
+  paymentTokens: t.readonly(t.array(t.string)),
+  transactionId: t.string
 });
 
 export const ClosePaymentRequest = t.union([

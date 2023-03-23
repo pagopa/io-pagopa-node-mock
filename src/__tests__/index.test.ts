@@ -282,7 +282,7 @@ describe("New Node call flow", () => {
     server.close();
   });
 
-  it("closePayment should return a OK response", async () => {
+  it("closePaymentOK should return a OK response", async () => {
     const config = pipe(
         Configuration.decode(CONFIG),
         E.getOrElseW(() => {
@@ -304,6 +304,35 @@ describe("New Node call flow", () => {
       timestampOperation: "2022-02-22T14:41:58.811+01:00",
       paymentMethod: "QUALSIASICOSAPAY",
       totalAmount: 51.0,
+      transactionId: "99910087308786"
+    });
+
+    const [status, responseData] = pipe(
+        response,
+        E.getOrElseW(l => {
+          logger.info(l);
+          throw new Error("Expected `Right` on closePayment");
+        })
+    );
+
+    expect(status).toEqual(200);
+    expect(responseData.outcome).toEqual("OK");
+  });
+
+  it("closePaymentKO should return a OK response", async () => {
+    const config = pipe(
+        Configuration.decode(CONFIG),
+        E.getOrElseW(() => {
+          throw Error(`Invalid configuration.`);
+        })
+    );
+    const restClient = new RestClient({
+      basepath: `http://localhost:${config.NODO_MOCK.PORT}`
+    });
+
+    const response = await restClient.closePayment({
+      outcome: "KO",
+      paymentTokens: ["8b13913acff44b559ed2e6e74cd93c17"],
       transactionId: "99910087308786"
     });
 

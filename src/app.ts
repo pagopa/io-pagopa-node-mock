@@ -262,7 +262,8 @@ export const newExpressApp = async (
     res.status(404).send("Not found");
   });
 
-  app.post("/nodo-per-pm/v2/closepayment", async (req, res) =>
+  app.post("/nodo-per-pm/v2/closepayment", async (req, res) => {
+    logger.info(req.body);
     pipe(
       ClosePaymentRequest.decode(req.body),
       E.map(closePayment),
@@ -273,8 +274,8 @@ export const newExpressApp = async (
           .status(400)
           .json({ descrizione: "closePayment: bad request", esito: "KO" });
       })
-    )
-  );
+    );
+  });
 
   app.post("/nodo-per-pm/v1/checkPosition", async (req, res) =>
     pipe(
