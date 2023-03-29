@@ -173,7 +173,7 @@ export const activateV2PaymenNoticeResponse = (): MockResponse => [
   200,
   `<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:common="http://pagopa-api.pagopa.gov.it/xsd/common-types/v1.0.0/" xmlns:nfp="http://pagopa-api.pagopa.gov.it/node/nodeForPsp.xsd">
     <soapenv:Body>
-        <ns2:activatePaymentNoticeV2Response>
+        <nfp:activatePaymentNoticeV2Response>
             <outcome>OK</outcome>
             <totalAmount>100.00</totalAmount>
             <paymentDescription>Quota Albo Ordine Giornalisti 2022</paymentDescription>
@@ -202,7 +202,7 @@ export const activateV2PaymenNoticeResponse = (): MockResponse => [
                 </transfer>
             </transferList>
             <creditorReferenceId>11137215100062787</creditorReferenceId>
-        </ns2:activatePaymentNoticeV2Response>
+        </nfp:activatePaymentNoticeV2Response>
     </soapenv:Body>
     </soapenv:Envelope>`
 ];

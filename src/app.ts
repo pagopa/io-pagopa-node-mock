@@ -259,7 +259,7 @@ export const newExpressApp = async (
       return res.status(activatePaymenRes[0]).send(activatePaymenRes[1]);
     }
 
-    if (soapRequest["nod:activatepaymentnoticev2request"]) {
+    if (soapRequest["ns2:activatepaymentnoticev2request"]) {
       const activatePaymenRes = activateV2PaymenNoticeResponse();
       return res.status(activatePaymenRes[0]).send(activatePaymenRes[1]);
     }
