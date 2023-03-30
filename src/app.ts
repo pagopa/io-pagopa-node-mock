@@ -13,6 +13,7 @@ import { checkPosition, CheckPositionRequest } from "./fixtures/checkPosition";
 import {
   activateIOPaymenResponse,
   activatePaymenNoticeResponse,
+  activateV2PaymenNoticeResponse,
   NodoAttivaRPT,
   NodoVerificaRPT,
   VerifyPaymentNoticeResponse
@@ -41,7 +42,6 @@ export const newExpressApp = async (
   app.use(express.json());
   app.use(express.urlencoded());
   app.use(bodyParserXml({}));
-
   // SOAP Server mock entrypoint
   // eslint-disable-next-line max-lines-per-function, sonarjs/cognitive-complexity,complexity
   app.post(config.NODO_MOCK.ROUTES.PPT_NODO, async (req, res) => {
@@ -256,6 +256,11 @@ export const newExpressApp = async (
     }
     if (soapRequest["ns2:activatepaymentnoticereq"]) {
       const activatePaymenRes = activatePaymenNoticeResponse();
+      return res.status(activatePaymenRes[0]).send(activatePaymenRes[1]);
+    }
+
+    if (soapRequest["ns2:activatepaymentnoticev2request"]) {
+      const activatePaymenRes = activateV2PaymenNoticeResponse();
       return res.status(activatePaymenRes[0]).send(activatePaymenRes[1]);
     }
     // The SOAP Request not implemented
