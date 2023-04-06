@@ -526,4 +526,36 @@ describe("New Node call flow", () => {
     expect(status).toEqual(400);
   });
 
+  it("checkPosition should return a 500 http response", async () => {
+    const config = pipe(
+        Configuration.decode(CONFIG),
+        E.getOrElseW(() => {
+          throw Error(`Invalid configuration.`);
+        })
+    );
+    const restClient = new RestClient({
+      basepath: `http://localhost:${config.NODO_MOCK.PORT}`
+    });
+
+    const request = await restClient.checkPosition({
+      positionslist:[
+        {
+          state : undefined,
+          description : undefined,
+          fiscalCode : "68289200126",
+          noticeNumber: "3332050951923271908"
+        }
+      ]
+    });
+
+    const [status] = pipe(
+      request,
+        E.getOrElseW(l => {
+          logger.info(l);
+          throw new Error("Expected `Right` on checkPosition");
+        })
+    );
+    expect(status).toEqual(500);
+  });
+
 });

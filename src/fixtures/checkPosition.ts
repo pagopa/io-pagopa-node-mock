@@ -58,6 +58,14 @@ export const checkPosition = (
       },
       400
     ];
+  } else if (req.positionslist[0].noticeNumber.startsWith("3331")) {
+    return [
+      {
+        outcome: "KO",
+        positionslist: req.positionslist
+      },
+      500
+    ];
   } else if (req.positionslist[0].noticeNumber.startsWith("3333")) {
     return [
       {
