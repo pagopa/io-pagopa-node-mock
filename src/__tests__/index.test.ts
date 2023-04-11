@@ -438,7 +438,6 @@ describe("New Node call flow", () => {
     });
 
     const request = await restClient.checkPosition({
-      mocktype: undefined,
       positionslist:[
         {
           state : undefined,
@@ -472,7 +471,6 @@ describe("New Node call flow", () => {
     });
 
     const request = await restClient.checkPosition({
-      mocktype: undefined,
       positionslist:[
         {
           state : undefined,
@@ -494,7 +492,8 @@ describe("New Node call flow", () => {
     expect(status).toEqual(200);
   });
 
-  it("checkPosition should return a 404 not found response", async () => {
+ 
+  it("checkPosition should return a 400 http response", async () => {
     const config = pipe(
         Configuration.decode(CONFIG),
         E.getOrElseW(() => {
@@ -506,13 +505,12 @@ describe("New Node call flow", () => {
     });
 
     const request = await restClient.checkPosition({
-      mocktype: "404",
       positionslist:[
         {
           state : undefined,
           description : undefined,
           fiscalCode : "68289200126",
-          noticeNumber: "0000050951923271908"
+          noticeNumber: "3332050951923271908"
         }
       ]
     });
@@ -524,11 +522,11 @@ describe("New Node call flow", () => {
           throw new Error("Expected `Right` on checkPosition");
         })
     );
-    expect((responseData as CheckPositionResponseError).error).toEqual("404 not found")
-    expect(status).toEqual(404);
+    expect((responseData as CheckPositionResponseError).description).toEqual("Error 400")
+    expect(status).toEqual(400);
   });
 
-  it("checkPosition should return a 408 request timeout response", async () => {
+  it("checkPosition should return a 500 http response", async () => {
     const config = pipe(
         Configuration.decode(CONFIG),
         E.getOrElseW(() => {
@@ -540,60 +538,24 @@ describe("New Node call flow", () => {
     });
 
     const request = await restClient.checkPosition({
-      mocktype: "408",
       positionslist:[
         {
           state : undefined,
           description : undefined,
           fiscalCode : "68289200126",
-          noticeNumber: "0000050951923271908"
+          noticeNumber: "3332050951923271908"
         }
       ]
     });
 
-    const [status,responseData] = pipe(
+    const [status] = pipe(
       request,
         E.getOrElseW(l => {
           logger.info(l);
           throw new Error("Expected `Right` on checkPosition");
         })
     );
-    expect((responseData as CheckPositionResponseError).error).toEqual("408 request timeout")
-    expect(status).toEqual(408);
-  });
-
-  it("checkPosition should return a 422 unprocessable entry response", async () => {
-    const config = pipe(
-        Configuration.decode(CONFIG),
-        E.getOrElseW(() => {
-          throw Error(`Invalid configuration.`);
-        })
-    );
-    const restClient = new RestClient({
-      basepath: `http://localhost:${config.NODO_MOCK.PORT}`
-    });
-
-    const request = await restClient.checkPosition({
-      mocktype: "422",
-      positionslist:[
-        {
-          state : undefined,
-          description : undefined,
-          fiscalCode : "68289200126",
-          noticeNumber: "0000050951923271908"
-        }
-      ]
-    });
-
-    const [status,responseData] = pipe(
-      request,
-        E.getOrElseW(l => {
-          logger.info(l);
-          throw new Error("Expected `Right` on checkPosition");
-        })
-    );
-    expect((responseData as CheckPositionResponseError).error).toEqual("422 unprocessable entry")
-    expect(status).toEqual(422);
+    expect(status).toEqual(500);
   });
 
 });
