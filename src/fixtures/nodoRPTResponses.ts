@@ -188,6 +188,7 @@ export const activateV2PaymenNoticeResponse = (): MockResponse => [
                     <fiscalCodePA>77777777777</fiscalCodePA>
                     <IBAN>IT45R0760103200000000001016</IBAN>
                     <remittanceInformation>/RFB/00202200000217527/5.00/TXT/</remittanceInformation>
+                    <transferCategory>transferCategoryTest</transferCategory>
                 </transfer>
                 <transfer>
                     <idTransfer>2</idTransfer>
