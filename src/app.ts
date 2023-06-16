@@ -13,7 +13,6 @@ import { checkPosition, CheckPositionRequest } from "./fixtures/checkPosition";
 import {
   activateIOPaymenResponse,
   activatePaymenNoticeResponse,
-  activateV2PaymenNoticeResponse,
   activateV2PaymenNoticeResponseAllCCP,
   NodoAttivaRPT,
   NodoVerificaRPT,
