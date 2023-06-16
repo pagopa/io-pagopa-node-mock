@@ -14,6 +14,7 @@ import {
   activateIOPaymenResponse,
   activatePaymenNoticeResponse,
   activateV2PaymenNoticeResponse,
+  activateV2PaymenNoticeResponseAllCCP,
   NodoAttivaRPT,
   NodoVerificaRPT,
   VerifyPaymentNoticeResponse
@@ -260,7 +261,7 @@ export const newExpressApp = async (
     }
 
     if (soapRequest["ns2:activatepaymentnoticev2request"]) {
-      const activatePaymenRes = activateV2PaymenNoticeResponse();
+      const activatePaymenRes = activateV2PaymenNoticeResponseAllCCP();
       return res.status(activatePaymenRes[0]).send(activatePaymenRes[1]);
     }
     // The SOAP Request not implemented
