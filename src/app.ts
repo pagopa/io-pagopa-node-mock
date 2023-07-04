@@ -13,7 +13,7 @@ import { checkPosition, CheckPositionRequest } from "./fixtures/checkPosition";
 import {
   activateIOPaymenResponse,
   activatePaymenNoticeResponse,
-  activateV2PaymenNoticeResponseAllCCP,
+  activateV2PaymenNoticeResponseAllCCPlight,
   NodoAttivaRPT,
   NodoVerificaRPT,
   VerifyPaymentNoticeResponse
@@ -260,7 +260,7 @@ export const newExpressApp = async (
     }
 
     if (soapRequest["ns2:activatepaymentnoticev2request"]) {
-      const activatePaymenRes = activateV2PaymenNoticeResponseAllCCP();
+      const activatePaymenRes = activateV2PaymenNoticeResponseAllCCPlight();
       return res.status(activatePaymenRes[0]).send(activatePaymenRes[1]);
     }
     // The SOAP Request not implemented
