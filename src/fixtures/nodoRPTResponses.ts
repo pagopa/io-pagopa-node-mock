@@ -216,7 +216,7 @@ export const activateV2PaymenNoticeResponseAllCCP = (): MockResponse => [
             <outcome>OK</outcome>
             <totalAmount>100.00</totalAmount>
             <paymentDescription>Quota Albo Ordine Giornalisti 2022</paymentDescription>
-            <fiscalCodePA>77777777777</fiscalCodePA>
+            <fiscalCodePA>77777777775</fiscalCodePA>
             <companyName>company</companyName>
             <officeName>office</officeName>
             <paymentToken>d56d327bb84047539023d98f04a63cad</paymentToken>
@@ -224,7 +224,7 @@ export const activateV2PaymenNoticeResponseAllCCP = (): MockResponse => [
                 <transfer>
                     <idTransfer>1</idTransfer>
                     <transferAmount>50.00</transferAmount>
-                    <fiscalCodePA>77777777777</fiscalCodePA>
+                    <fiscalCodePA>77777777775</fiscalCodePA>
                     <IBAN>IT45R0760103200000000001016</IBAN>
                     <remittanceInformation>/RFB/00202200000217527/5.00/TXT/</remittanceInformation>
                     <transferCategory>transferCategoryTest</transferCategory>
@@ -238,7 +238,7 @@ export const activateV2PaymenNoticeResponseAllCCP = (): MockResponse => [
                 <transfer>
                     <idTransfer>2</idTransfer>
                     <transferAmount>50.00</transferAmount>
-                    <fiscalCodePA>77777777777</fiscalCodePA>
+                    <fiscalCodePA>77777777775</fiscalCodePA>
                     <richiestaMarcaDaBollo>
                         <hashDocumento>documentHash</hashDocumento>
                         <tipoBollo>type</tipoBollo>
@@ -267,7 +267,7 @@ export const activateV2PaymenNoticeResponseAllCCPlight = (): MockResponse => [
             <outcome>OK</outcome>
             <totalAmount>100.00</totalAmount>
             <paymentDescription>Quota Albo Ordine Giornalisti 2022</paymentDescription>
-            <fiscalCodePA>77777777777</fiscalCodePA>
+            <fiscalCodePA>77777777776</fiscalCodePA>
             <companyName>company</companyName>
             <officeName>office</officeName>
             <paymentToken>d56d327bb84047539023d98f04a63cad</paymentToken>
@@ -275,7 +275,7 @@ export const activateV2PaymenNoticeResponseAllCCPlight = (): MockResponse => [
                 <transfer>
                     <idTransfer>1</idTransfer>
                     <transferAmount>50.00</transferAmount>
-                    <fiscalCodePA>77777777777</fiscalCodePA>
+                    <fiscalCodePA>77777777776</fiscalCodePA>
                     <IBAN>IT20U0760116100000000000000</IBAN>
                     <remittanceInformation>/RFB/00202200000217527/5.00/TXT/</remittanceInformation>
                     <transferCategory>transferCategoryTest</transferCategory> 
@@ -283,7 +283,7 @@ export const activateV2PaymenNoticeResponseAllCCPlight = (): MockResponse => [
                 <transfer>
                     <idTransfer>2</idTransfer>
                     <transferAmount>50.00</transferAmount>
-                    <fiscalCodePA>77777777777</fiscalCodePA>
+                    <fiscalCodePA>77777777776</fiscalCodePA>
                     <IBAN>IT20U0760116100000123000000</IBAN>
                     <remittanceInformation>/RFB/00202200000217527/5.00/TXT/</remittanceInformation>
                 </transfer>
