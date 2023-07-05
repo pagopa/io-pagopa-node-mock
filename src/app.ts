@@ -261,9 +261,11 @@ export const newExpressApp = async (
       return res.status(activatePaymenRes[0]).send(activatePaymenRes[1]);
     }
 
+    // eslint-disable-next-line sonarjs/no-duplicate-string
     if (soapRequest["ns2:activatepaymentnoticev2request"]) {
+      logger.info(soapRequest["ns2:activatepaymentnoticev2request"]);
       const fiscalCode =
-        soapRequest["ns2:activatepaymentnoticev2request"][0].qrCode;
+        soapRequest["ns2:activatepaymentnoticev2request"][0].qrcode;
       logger.info("fiscalCode: ".concat(fiscalCode));
       if (fiscalCode === "77777777776") {
         const activatePaymenRes1 = activateV2PaymenNoticeResponseAllCCPlight();
