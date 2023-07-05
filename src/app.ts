@@ -265,7 +265,7 @@ export const newExpressApp = async (
     if (soapRequest["ns2:activatepaymentnoticev2request"]) {
       const fiscalCode =
         soapRequest["ns2:activatepaymentnoticev2request"][0].qrcode[0]
-          .fiscalcode;
+          .fiscalcode[0];
       if (fiscalCode === "77777777776") {
         logger.info("fiscalCode: ".concat(fiscalCode));
         const activatePaymenRes1 = activateV2PaymenNoticeResponseAllCCPlight();
