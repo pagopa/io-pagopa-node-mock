@@ -14,6 +14,8 @@ import {
   activateIOPaymenResponse,
   activatePaymenNoticeResponse,
   activateV2PaymenNoticeResponse,
+  activateV2PaymenNoticeResponseAllCCP,
+  activateV2PaymenNoticeResponseAllCCPlight,
   NodoAttivaRPT,
   NodoVerificaRPT,
   VerifyPaymentNoticeResponse
@@ -259,7 +261,20 @@ export const newExpressApp = async (
       return res.status(activatePaymenRes[0]).send(activatePaymenRes[1]);
     }
 
+    // eslint-disable-next-line sonarjs/no-duplicate-string
     if (soapRequest["ns2:activatepaymentnoticev2request"]) {
+      const fiscalCode =
+        soapRequest["ns2:activatepaymentnoticev2request"][0].qrcode[0]
+          .fiscalcode[0];
+      if (fiscalCode === "77777777776") {
+        logger.info("fiscalCode: ".concat(fiscalCode));
+        const activatePaymenRes1 = activateV2PaymenNoticeResponseAllCCPlight();
+        return res.status(activatePaymenRes1[0]).send(activatePaymenRes1[1]);
+      } else if (fiscalCode === "77777777775") {
+        logger.info("fiscalCode: ".concat(fiscalCode));
+        const activatePaymenRes2 = activateV2PaymenNoticeResponseAllCCP();
+        return res.status(activatePaymenRes2[0]).send(activatePaymenRes2[1]);
+      }
       const activatePaymenRes = activateV2PaymenNoticeResponse();
       return res.status(activatePaymenRes[0]).send(activatePaymenRes[1]);
     }
