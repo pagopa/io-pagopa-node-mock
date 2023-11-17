@@ -157,11 +157,11 @@ export const newExpressApp = async (
     if (
       // eslint-disable-next-line sonarjs/no-duplicate-string
       soapRequest["ppt:nodoverificarpt"] ||
-      soapRequest["ns3:nodoverificarpt"]
+      soapRequest["ns4:nodoverificarpt"]
     ) {
       const nodoVerificaRPT = soapRequest["ppt:nodoverificarpt"]
         ? soapRequest["ppt:nodoverificarpt"][0]
-        : soapRequest["ns3:nodoverificarpt"][0];
+        : soapRequest["ns4:nodoverificarpt"][0];
       const iuv = nodoVerificaRPT.codiceidrpt[0]["qrc:qrcode"]
         ? nodoVerificaRPT.codiceidrpt[0]["qrc:qrcode"][0]["qrc:codiuv"][0]
         : nodoVerificaRPT.codiceidrpt[0]["ns2:qrcode"][0]["ns2:codiuv"][0];
@@ -227,7 +227,7 @@ export const newExpressApp = async (
     // The SOAP request is a verifypaymentnoticereq request
     if (
       soapRequest["nfpsp:verifypaymentnoticereq"] ||
-      soapRequest["ns2:verifypaymentnoticereq"]
+      soapRequest["ns3:verifypaymentnoticereq"]
     ) {
       const amountNotice = "2.00";
       const verifyPaymentNoticeRes = VerifyPaymentNoticeResponse({
@@ -256,7 +256,10 @@ export const newExpressApp = async (
       });
       return res.status(activateIOPaymenRes[0]).send(activateIOPaymenRes[1]);
     }
-    if (soapRequest["ns2:activatepaymentnoticereq"]) {
+    if (
+      soapRequest["ns3:activatepaymentnoticereq"] ||
+      soapRequest["ns2:activatepaymentnoticereq"]
+    ) {
       const activatePaymenRes = activatePaymenNoticeResponse();
       return res.status(activatePaymenRes[0]).send(activatePaymenRes[1]);
     }
