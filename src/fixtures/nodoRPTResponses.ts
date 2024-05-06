@@ -185,7 +185,7 @@ export const activateV2PaymenNoticeResponse = (): MockResponse => [
               Math.random() * 99999999999
             )}</companyName>
             <officeName>office</officeName>
-            <paymentToken>${randomUUID().replace(/-/g, '')}</paymentToken>
+            <paymentToken>${randomUUID().replace(/-/g, "")}</paymentToken>
             <transferList>
                 <transfer>
                     <idTransfer>1</idTransfer>
@@ -228,7 +228,7 @@ export const activateV2PaymenNoticeResponseAllCCP = (): MockResponse => [
               Math.random() * 99999999999
             )}</companyName>
             <officeName>office</officeName>
-            <paymentToken>${randomUUID().replace(/-/g, '')}</paymentToken>
+            <paymentToken>${randomUUID().replace(/-/g, "")}</paymentToken>
             <transferList>
                 <transfer>
                     <idTransfer>1</idTransfer>
@@ -283,7 +283,7 @@ export const activateV2PaymenNoticeResponseAllCCPlight = (): MockResponse => [
               Math.random() * 99999999999
             )}</companyName>
             <officeName>office</officeName>
-            <paymentToken>${randomUUID().replace(/-/g, '')}</paymentToken>
+            <paymentToken>${randomUUID().replace(/-/g, "")}</paymentToken>
             <transferList>
                 <transfer>
                     <idTransfer>1</idTransfer>
