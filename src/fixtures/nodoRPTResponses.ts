@@ -1,4 +1,6 @@
+import { randomUUID } from "crypto";
 import { DateFromString } from "@pagopa/ts-commons/lib/dates";
+import { randomInt } from "fp-ts/lib/Random";
 import { ctFaultBean_type_nfpsp } from "../generated/nodeForPsp/ctFaultBean_type_nfpsp";
 import { stAmount_type_nfpsp } from "../generated/nodeForPsp/stAmount_type_nfpsp";
 import { faultBean_type_ppt } from "../generated/PagamentiTelematiciPspNodoservice/faultBean_type_ppt";
@@ -176,11 +178,14 @@ export const activateV2PaymenNoticeResponse = (): MockResponse => [
         <nfp:activatePaymentNoticeV2Response>
             <outcome>OK</outcome>
             <totalAmount>100.00</totalAmount>
-            <paymentDescription>Quota Albo Ordine Giornalisti 2022</paymentDescription>
+            <paymentDescription>Quota Albo Ordine Giornalisti - ${randomInt(
+              0,
+              999999999999
+            )}</paymentDescription>
             <fiscalCodePA>77777777777</fiscalCodePA>
             <companyName>company</companyName>
             <officeName>office</officeName>
-            <paymentToken>d56d327bb84047539023d98f04a63cad</paymentToken>
+            <paymentToken>${randomUUID().replace("-", "")}</paymentToken>
             <transferList>
                 <transfer>
                     <idTransfer>1</idTransfer>
@@ -215,11 +220,14 @@ export const activateV2PaymenNoticeResponseAllCCP = (): MockResponse => [
         <nfp:activatePaymentNoticeV2Response>
             <outcome>OK</outcome>
             <totalAmount>100.00</totalAmount>
-            <paymentDescription>Quota Albo Ordine Giornalisti 2022</paymentDescription>
+            <paymentDescription>Quota Albo Ordine Giornalisti - ${randomInt(
+              0,
+              999999999999
+            )}</paymentDescription>
             <fiscalCodePA>77777777775</fiscalCodePA>
             <companyName>company</companyName>
             <officeName>office</officeName>
-            <paymentToken>d56d327bb84047539023d98f04a63cad</paymentToken>
+            <paymentToken>${randomUUID().replace("-", "")}</paymentToken>
             <transferList>
                 <transfer>
                     <idTransfer>1</idTransfer>
@@ -266,11 +274,14 @@ export const activateV2PaymenNoticeResponseAllCCPlight = (): MockResponse => [
         <nfp:activatePaymentNoticeV2Response>
             <outcome>OK</outcome>
             <totalAmount>100.00</totalAmount>
-            <paymentDescription>Quota Albo Ordine Giornalisti 2022</paymentDescription>
+            <paymentDescription>Quota Albo Ordine Giornalisti - ${randomInt(
+              0,
+              999999999999
+            )}</paymentDescription>
             <fiscalCodePA>77777777776</fiscalCodePA>
             <companyName>company</companyName>
             <officeName>office</officeName>
-            <paymentToken>d56d327bb84047539023d98f04a63cad</paymentToken>
+            <paymentToken>${randomUUID().replace("-", "")}</paymentToken>
             <transferList>
                 <transfer>
                     <idTransfer>1</idTransfer>
