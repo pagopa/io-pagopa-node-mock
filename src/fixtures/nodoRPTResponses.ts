@@ -183,7 +183,7 @@ export const activateV2PaymenNoticeResponse = (): MockResponse => [
               999999999999
             )}</paymentDescription>
             <fiscalCodePA>77777777777</fiscalCodePA>
-            <companyName>company</companyName>
+            <companyName>company_${randomInt(0, 999999999999)}</companyName>
             <officeName>office</officeName>
             <paymentToken>${randomUUID().replace("-", "")}</paymentToken>
             <transferList>
@@ -225,7 +225,7 @@ export const activateV2PaymenNoticeResponseAllCCP = (): MockResponse => [
               999999999999
             )}</paymentDescription>
             <fiscalCodePA>77777777775</fiscalCodePA>
-            <companyName>company</companyName>
+            <companyName>company_${randomInt(0, 999999999999)}</companyName>
             <officeName>office</officeName>
             <paymentToken>${randomUUID().replace("-", "")}</paymentToken>
             <transferList>
@@ -279,7 +279,7 @@ export const activateV2PaymenNoticeResponseAllCCPlight = (): MockResponse => [
               999999999999
             )}</paymentDescription>
             <fiscalCodePA>77777777776</fiscalCodePA>
-            <companyName>company</companyName>
+            <companyName>company_${randomInt(0, 999999999999)}</companyName>
             <officeName>office</officeName>
             <paymentToken>${randomUUID().replace("-", "")}</paymentToken>
             <transferList>
