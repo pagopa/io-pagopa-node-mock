@@ -1,6 +1,5 @@
 import { randomUUID } from "crypto";
 import { DateFromString } from "@pagopa/ts-commons/lib/dates";
-import { randomInt } from "fp-ts/lib/Random";
 import { ctFaultBean_type_nfpsp } from "../generated/nodeForPsp/ctFaultBean_type_nfpsp";
 import { stAmount_type_nfpsp } from "../generated/nodeForPsp/stAmount_type_nfpsp";
 import { faultBean_type_ppt } from "../generated/PagamentiTelematiciPspNodoservice/faultBean_type_ppt";
@@ -178,12 +177,13 @@ export const activateV2PaymenNoticeResponse = (): MockResponse => [
         <nfp:activatePaymentNoticeV2Response>
             <outcome>OK</outcome>
             <totalAmount>100.00</totalAmount>
-            <paymentDescription>Quota Albo Ordine Giornalisti - ${randomInt(
-              0,
-              999999999999
+            <paymentDescription>Quota Albo Ordine Giornalisti - ${Math.floor(
+              Math.random() * 99999999999
             )}</paymentDescription>
             <fiscalCodePA>77777777777</fiscalCodePA>
-            <companyName>company_${randomInt(0, 999999999999)}</companyName>
+            <companyName>company_${Math.floor(
+              Math.random() * 99999999999
+            )}</companyName>
             <officeName>office</officeName>
             <paymentToken>${randomUUID().replace("-", "")}</paymentToken>
             <transferList>
@@ -220,12 +220,13 @@ export const activateV2PaymenNoticeResponseAllCCP = (): MockResponse => [
         <nfp:activatePaymentNoticeV2Response>
             <outcome>OK</outcome>
             <totalAmount>100.00</totalAmount>
-            <paymentDescription>Quota Albo Ordine Giornalisti - ${randomInt(
-              0,
-              999999999999
+            <paymentDescription>Quota Albo Ordine Giornalisti - ${Math.floor(
+              Math.random() * 99999999999
             )}</paymentDescription>
             <fiscalCodePA>77777777775</fiscalCodePA>
-            <companyName>company_${randomInt(0, 999999999999)}</companyName>
+            <companyName>company_${Math.floor(
+              Math.random() * 99999999999
+            )}</companyName>
             <officeName>office</officeName>
             <paymentToken>${randomUUID().replace("-", "")}</paymentToken>
             <transferList>
@@ -274,12 +275,13 @@ export const activateV2PaymenNoticeResponseAllCCPlight = (): MockResponse => [
         <nfp:activatePaymentNoticeV2Response>
             <outcome>OK</outcome>
             <totalAmount>100.00</totalAmount>
-            <paymentDescription>Quota Albo Ordine Giornalisti - ${randomInt(
-              0,
-              999999999999
+            <paymentDescription>Quota Albo Ordine Giornalisti - ${Math.floor(
+              Math.random() * 99999999999
             )}</paymentDescription>
             <fiscalCodePA>77777777776</fiscalCodePA>
-            <companyName>company_${randomInt(0, 999999999999)}</companyName>
+            <companyName>company_${Math.floor(
+              Math.random() * 99999999999
+            )}</companyName>
             <officeName>office</officeName>
             <paymentToken>${randomUUID().replace("-", "")}</paymentToken>
             <transferList>
