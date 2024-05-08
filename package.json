@@ -20,6 +20,7 @@
     "test": "jest",
     "test:coverage": "jest --coverage",
     "lint": "eslint . -c .eslintrc.js --ext .ts,.tsx --cache",
+    "lint-autofix": "eslint . -c .eslintrc.js --ext .ts,.tsx --fix",
     "generate": "npm-run-all -s generate:yaml-from-wsdl generate:ts-from-yaml:*",
     "generate:ts-from-yaml:nodeForPsp": "shx mkdir -p src/generated/nodeForPsp && rimraf src/generated/nodeForPsp/* && gen-api-models --strict 0 --api-spec src/generated/yaml-file/nodeForPsp_Service.yaml --out-dir src/generated/nodeForPsp",
     "generate:ts-from-yaml:FespCdService": "shx mkdir -p src/generated/FespCdService && rimraf src/generated/FespCdService/* && gen-api-models --strict 0 --api-spec src/generated/yaml-file/FespCdService.yaml --out-dir src/generated/FespCdService",
