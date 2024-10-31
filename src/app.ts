@@ -276,6 +276,7 @@ export const newExpressApp = async (
         return res.status(activatePaymenRes2[0]).send(activatePaymenRes2[1]);
       } else if (fiscalCode === "77777777774") {
         const activatePaymenRes3 = activateV2PaymenNoticeResponseWithConventionMetadata();
+        logger.info(activatePaymenRes3);
         return res.status(activatePaymenRes3[0]).send(activatePaymenRes3[1]);
       }
       const activatePaymenRes = activateV2PaymenNoticeResponse();
