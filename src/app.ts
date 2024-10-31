@@ -16,6 +16,7 @@ import {
   activateV2PaymenNoticeResponse,
   activateV2PaymenNoticeResponseAllCCP,
   activateV2PaymenNoticeResponseAllCCPlight,
+  activateV2PaymenNoticeResponseWithConventionMetadata,
   NodoAttivaRPT,
   NodoVerificaRPT,
   VerifyPaymentNoticeResponse
@@ -266,14 +267,16 @@ export const newExpressApp = async (
       const fiscalCode =
         soapRequest["ns2:activatepaymentnoticev2request"][0].qrcode[0]
           .fiscalcode[0];
+      logger.info("fiscalCode: ".concat(fiscalCode));
       if (fiscalCode === "77777777776") {
-        logger.info("fiscalCode: ".concat(fiscalCode));
         const activatePaymenRes1 = activateV2PaymenNoticeResponseAllCCPlight();
         return res.status(activatePaymenRes1[0]).send(activatePaymenRes1[1]);
       } else if (fiscalCode === "77777777775") {
-        logger.info("fiscalCode: ".concat(fiscalCode));
         const activatePaymenRes2 = activateV2PaymenNoticeResponseAllCCP();
         return res.status(activatePaymenRes2[0]).send(activatePaymenRes2[1]);
+      } else if (fiscalCode === "77777777774") {
+        const activatePaymenRes3 = activateV2PaymenNoticeResponseWithConventionMetadata();
+        return res.status(activatePaymenRes3[0]).send(activatePaymenRes3[1]);
       }
       const activatePaymenRes = activateV2PaymenNoticeResponse();
       return res.status(activatePaymenRes[0]).send(activatePaymenRes[1]);
