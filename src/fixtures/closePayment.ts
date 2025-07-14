@@ -53,7 +53,7 @@ export const closePayment = (
       case "00000000000000000000000000000001":
         return [
           {
-            description: "closePayment - mock case Bad request",
+            description: "Generic error description",
             outcome: "KO"
           },
           400
@@ -61,7 +61,7 @@ export const closePayment = (
       case "00000000000000000000000000000002":
         return [
           {
-            description: "closePayment - mock case Not found",
+            description: "Generic error description",
             outcome: "KO"
           },
           404
@@ -69,7 +69,7 @@ export const closePayment = (
       case "00000000000000000000000000000003":
         return [
           {
-            description: "closePayment - mock case UNPROCESSABLE ENTITY",
+            description: "Generic error description",
             outcome: "KO"
           },
           422
@@ -85,7 +85,7 @@ export const closePayment = (
       case "00000000000000000000000000000005":
         return [
           {
-            description: "closePayment - mock case Generic error",
+            description: "Generic error description",
             outcome: "KO"
           },
           500
@@ -93,7 +93,7 @@ export const closePayment = (
       case "00000000000000000000000000000006":
         return [
           {
-            description: "closePayment - long processing response",
+            description: "Generic error description",
             outcome: "KO"
           },
           500,
