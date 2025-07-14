@@ -281,6 +281,201 @@ describe("New Node call flow", () => {
     server.close();
   });
 
+  it("closePayment should return BAD REQUEST on appropriate payment token input", async () => {
+    const config = pipe(
+        Configuration.decode(CONFIG),
+        E.getOrElseW(() => {
+          throw Error(`Invalid configuration.`);
+        })
+    );
+    const restClient = new RestClient({
+      basepath: `http://localhost:${config.NODO_MOCK.PORT}`
+    });
+
+    const response = await restClient.closePayment({
+      additionalPaymentInformations: {
+        mockCase: "notFound"
+      },
+      fee: 1.0,
+      idChannel: "13212880160_02",
+      idBrokerPSP: "13212880160",
+      idPSP: "CIPBITMM",
+      outcome: "OK",
+      paymentTokens: ["00000000000000000000000000000001"],
+      timestampOperation: "2022-02-22T14:41:58.811+01:00",
+      paymentMethod: "QUALSIASICOSAPAY",
+      totalAmount: 51.0,
+      transactionId: "99910087308786"
+    });
+
+    const [status, responseData] = pipe(
+        response,
+        E.getOrElseW(l => {
+          logger.info(l);
+          throw new Error("Expected `Right` on closePayment");
+        })
+    );
+
+    expect(status).toEqual(400);
+    expect(responseData.outcome).toEqual("KO");
+  });
+
+   it("closePayment should return NOT FOUND on appropriate payment token input", async () => {
+    const config = pipe(
+        Configuration.decode(CONFIG),
+        E.getOrElseW(() => {
+          throw Error(`Invalid configuration.`);
+        })
+    );
+    const restClient = new RestClient({
+      basepath: `http://localhost:${config.NODO_MOCK.PORT}`
+    });
+
+    const response = await restClient.closePayment({
+      additionalPaymentInformations: {
+        mockCase: "notFound"
+      },
+      fee: 1.0,
+      idChannel: "13212880160_02",
+      idBrokerPSP: "13212880160",
+      idPSP: "CIPBITMM",
+      outcome: "OK",
+      paymentTokens: ["00000000000000000000000000000002"],
+      timestampOperation: "2022-02-22T14:41:58.811+01:00",
+      paymentMethod: "QUALSIASICOSAPAY",
+      totalAmount: 51.0,
+      transactionId: "99910087308786"
+    });
+
+    const [status, responseData] = pipe(
+        response,
+        E.getOrElseW(l => {
+          logger.info(l);
+          throw new Error("Expected `Right` on closePayment");
+        })
+    );
+
+    expect(status).toEqual(404);
+    expect(responseData.outcome).toEqual("KO");
+  });
+
+    it("closePayment should return UNPROCESSABLE ENTITY on appropriate payment token input", async () => {
+    const config = pipe(
+        Configuration.decode(CONFIG),
+        E.getOrElseW(() => {
+          throw Error(`Invalid configuration.`);
+        })
+    );
+    const restClient = new RestClient({
+      basepath: `http://localhost:${config.NODO_MOCK.PORT}`
+    });
+
+    const response = await restClient.closePayment({
+      additionalPaymentInformations: {
+        mockCase: "notFound"
+      },
+      fee: 1.0,
+      idChannel: "13212880160_02",
+      idBrokerPSP: "13212880160",
+      idPSP: "CIPBITMM",
+      outcome: "OK",
+      paymentTokens: ["00000000000000000000000000000003"],
+      timestampOperation: "2022-02-22T14:41:58.811+01:00",
+      paymentMethod: "QUALSIASICOSAPAY",
+      totalAmount: 51.0,
+      transactionId: "99910087308786"
+    });
+
+    const [status, responseData] = pipe(
+        response,
+        E.getOrElseW(l => {
+          logger.info(l);
+          throw new Error("Expected `Right` on closePayment");
+        })
+    );
+
+    expect(status).toEqual(422);
+    expect(responseData.outcome).toEqual("KO");
+  });
+
+    it("closePayment should return UNPROCESSABLE ENTITY with Node did not receive RPT yet description on appropriate payment token input", async () => {
+    const config = pipe(
+        Configuration.decode(CONFIG),
+        E.getOrElseW(() => {
+          throw Error(`Invalid configuration.`);
+        })
+    );
+    const restClient = new RestClient({
+      basepath: `http://localhost:${config.NODO_MOCK.PORT}`
+    });
+
+    const response = await restClient.closePayment({
+      additionalPaymentInformations: {
+        mockCase: "notFound"
+      },
+      fee: 1.0,
+      idChannel: "13212880160_02",
+      idBrokerPSP: "13212880160",
+      idPSP: "CIPBITMM",
+      outcome: "OK",
+      paymentTokens: ["00000000000000000000000000000004"],
+      timestampOperation: "2022-02-22T14:41:58.811+01:00",
+      paymentMethod: "QUALSIASICOSAPAY",
+      totalAmount: 51.0,
+      transactionId: "99910087308786"
+    });
+
+    const [status, responseData] = pipe(
+        response,
+        E.getOrElseW(l => {
+          logger.info(l);
+          throw new Error("Expected `Right` on closePayment");
+        })
+    );
+
+    expect(status).toEqual(422);
+    expect(responseData).toEqual({outcome: "KO", description: "Node did not receive RPT yet"});
+  });
+
+    it("closePayment should return INTERNAL SERVER ERROR on appropriate payment token input", async () => {
+    const config = pipe(
+        Configuration.decode(CONFIG),
+        E.getOrElseW(() => {
+          throw Error(`Invalid configuration.`);
+        })
+    );
+    const restClient = new RestClient({
+      basepath: `http://localhost:${config.NODO_MOCK.PORT}`
+    });
+
+    const response = await restClient.closePayment({
+      additionalPaymentInformations: {
+        mockCase: "notFound"
+      },
+      fee: 1.0,
+      idChannel: "13212880160_02",
+      idBrokerPSP: "13212880160",
+      idPSP: "CIPBITMM",
+      outcome: "OK",
+      paymentTokens: ["00000000000000000000000000000005"],
+      timestampOperation: "2022-02-22T14:41:58.811+01:00",
+      paymentMethod: "QUALSIASICOSAPAY",
+      totalAmount: 51.0,
+      transactionId: "99910087308786"
+    });
+
+    const [status, responseData] = pipe(
+        response,
+        E.getOrElseW(l => {
+          logger.info(l);
+          throw new Error("Expected `Right` on closePayment");
+        })
+    );
+
+    expect(status).toEqual(500);
+    expect(responseData.outcome).toEqual("KO");
+  });
+
   it("closePaymentOK should return a OK response", async () => {
     const config = pipe(
         Configuration.decode(CONFIG),
@@ -464,7 +659,7 @@ describe("New Node call flow", () => {
           state : undefined,
           description : undefined,
           fiscalCode : "68289200126",
-          noticeNumber: "3332050951923271908"
+          noticeNumber: "3331050951923271908"
         }
       ]
     });
