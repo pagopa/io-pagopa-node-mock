@@ -43,6 +43,7 @@ export const ClosePaymentResponse = t.union([
 
 export type ClosePaymentResponse = t.TypeOf<typeof ClosePaymentResponse>;
 
+const closePaymentGenericErrorDescription = "Generic error description";
 export const closePayment = (
   req: ClosePaymentRequest
   // close payment response, status code and response timeout
@@ -53,7 +54,7 @@ export const closePayment = (
       case "00000000000000000000000000000001":
         return [
           {
-            description: "Generic error description",
+            description: closePaymentGenericErrorDescription,
             outcome: "KO"
           },
           400
@@ -61,7 +62,7 @@ export const closePayment = (
       case "00000000000000000000000000000002":
         return [
           {
-            description: "Generic error description",
+            description: closePaymentGenericErrorDescription,
             outcome: "KO"
           },
           404
@@ -69,7 +70,7 @@ export const closePayment = (
       case "00000000000000000000000000000003":
         return [
           {
-            description: "Generic error description",
+            description: closePaymentGenericErrorDescription,
             outcome: "KO"
           },
           422
@@ -85,7 +86,7 @@ export const closePayment = (
       case "00000000000000000000000000000005":
         return [
           {
-            description: "Generic error description",
+            description: closePaymentGenericErrorDescription,
             outcome: "KO"
           },
           500
@@ -93,7 +94,7 @@ export const closePayment = (
       case "00000000000000000000000000000006":
         return [
           {
-            description: "Generic error description",
+            description: closePaymentGenericErrorDescription,
             outcome: "KO"
           },
           500,
