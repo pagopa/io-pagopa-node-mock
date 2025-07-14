@@ -291,7 +291,12 @@ export const newExpressApp = async (
     pipe(
       ClosePaymentRequest.decode(req.body),
       E.map(closePayment),
-      E.map(([response, status]) => res.status(status).json(response)),
+      E.map(async ([response, status, timeout]) => {
+        if (timeout) {
+          await new Promise(resolve => setTimeout(resolve, timeout));
+        }
+        return res.status(status).json(response);
+      }),
       E.mapLeft(errors => {
         logger.error(formatValidationErrors(errors));
         return res

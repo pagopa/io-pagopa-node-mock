@@ -43,28 +43,70 @@ export const ClosePaymentResponse = t.union([
 
 export type ClosePaymentResponse = t.TypeOf<typeof ClosePaymentResponse>;
 
+const closePaymentGenericErrorDescription = "Generic error description";
 export const closePayment = (
   req: ClosePaymentRequest
-): readonly [ClosePaymentResponse, number] => {
+  // close payment response, status code and response timeout
+): readonly [ClosePaymentResponse, number, number?] => {
   if (req.outcome === "OK") {
-    if (req.additionalPaymentInformations.mockCase === "notFound") {
-      return [
-        {
-          description: "closePayment - mock case NOT FOUND",
-          outcome: "KO"
-        },
-        404
-      ];
-    } else if (
-      req.additionalPaymentInformations.mockCase === "unprocessableEntity"
-    ) {
-      return [
-        {
-          description: "closePayment - mock case UNPROCESSABLE ENTITY",
-          outcome: "KO"
-        },
-        422
-      ];
+    const transactionId = req.paymentTokens[0];
+    switch (transactionId) {
+      case "00000000000000000000000000000001":
+        return [
+          {
+            description: closePaymentGenericErrorDescription,
+            outcome: "KO"
+          },
+          400
+        ];
+      case "00000000000000000000000000000002":
+        return [
+          {
+            description: closePaymentGenericErrorDescription,
+            outcome: "KO"
+          },
+          404
+        ];
+      case "00000000000000000000000000000003":
+        return [
+          {
+            description: closePaymentGenericErrorDescription,
+            outcome: "KO"
+          },
+          422
+        ];
+      case "00000000000000000000000000000004":
+        return [
+          {
+            description: "Node did not receive RPT yet",
+            outcome: "KO"
+          },
+          422
+        ];
+      case "00000000000000000000000000000005":
+        return [
+          {
+            description: closePaymentGenericErrorDescription,
+            outcome: "KO"
+          },
+          500
+        ];
+      case "00000000000000000000000000000006":
+        return [
+          {
+            description: closePaymentGenericErrorDescription,
+            outcome: "KO"
+          },
+          500,
+          20000
+        ];
+      default:
+        return [
+          {
+            outcome: "OK"
+          },
+          200
+        ];
     }
   }
 
