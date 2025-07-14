@@ -7,7 +7,6 @@ import * as express from "express";
 import * as E from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
 import * as http from "http";
-import {formatValidationErrors} from "io-ts-reporters";
 import waitForExpect from "wait-for-expect";
 import * as FespCdServer from "../__mock__/FespCdServer";
 import { PagamentiTelematiciPspNodoAsyncClient } from "../__mock__/PPTPortClient";
@@ -346,84 +345,6 @@ describe("New Node call flow", () => {
 
     expect(status).toEqual(200);
     expect(responseData.outcome).toEqual("OK");
-  });
-
-  it("closePayment should return NOT FOUND on appropriate mockCase", async () => {
-    const config = pipe(
-        Configuration.decode(CONFIG),
-        E.getOrElseW(() => {
-          throw Error(`Invalid configuration.`);
-        })
-    );
-    const restClient = new RestClient({
-      basepath: `http://localhost:${config.NODO_MOCK.PORT}`
-    });
-
-    const response = await restClient.closePayment({
-      additionalPaymentInformations: {
-        mockCase: "notFound"
-      },
-      fee: 1.0,
-      idChannel: "13212880160_02",
-      idBrokerPSP: "13212880160",
-      idPSP: "CIPBITMM",
-      outcome: "OK",
-      paymentTokens: ["8b13913acff44b559ed2e6e74cd93c17"],
-      timestampOperation: "2022-02-22T14:41:58.811+01:00",
-      paymentMethod: "QUALSIASICOSAPAY",
-      totalAmount: 51.0,
-      transactionId: "99910087308786"
-    });
-
-    const [status, responseData] = pipe(
-        response,
-        E.getOrElseW(l => {
-          logger.info(l);
-          throw new Error("Expected `Right` on closePayment");
-        })
-    );
-
-    expect(status).toEqual(404);
-    expect(responseData.outcome).toEqual("KO");
-  });
-
-  it("closePayment should return UNPROCESSABLE ENTITY on appropriate mockCase", async () => {
-    const config = pipe(
-        Configuration.decode(CONFIG),
-        E.getOrElseW(() => {
-          throw Error(`Invalid configuration.`);
-        })
-    );
-    const restClient = new RestClient({
-      basepath: `http://localhost:${config.NODO_MOCK.PORT}`
-    });
-
-    const response = await restClient.closePayment({
-      additionalPaymentInformations: {
-        mockCase: "unprocessableEntity"
-      },
-      fee: 1.0,
-      idChannel: "13212880160_02",
-      idBrokerPSP: "13212880160",
-      idPSP: "CIPBITMM",
-      outcome: "OK",
-      paymentTokens: ["8b13913acff44b559ed2e6e74cd93c17"],
-      timestampOperation: "2022-02-22T14:41:58.811+01:00",
-      paymentMethod: "QUALSIASICOSAPAY",
-      totalAmount: 51.0,
-      transactionId: "99910087308786"
-    });
-
-    const [status, responseData] = pipe(
-        response,
-        E.getOrElseW(l => {
-          logger.info(formatValidationErrors(l));
-          throw new Error("Expected `Right` on closePayment");
-        })
-    );
-
-    expect(status).toEqual(422);
-    expect(responseData.outcome).toEqual("KO");
   });
 
   it("checkPosition should return a OK response", async () => {

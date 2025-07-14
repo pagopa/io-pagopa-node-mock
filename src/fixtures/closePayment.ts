@@ -45,26 +45,67 @@ export type ClosePaymentResponse = t.TypeOf<typeof ClosePaymentResponse>;
 
 export const closePayment = (
   req: ClosePaymentRequest
-): readonly [ClosePaymentResponse, number] => {
+  // close payment response, status code and response timeout
+): readonly [ClosePaymentResponse, number, number?] => {
   if (req.outcome === "OK") {
-    if (req.additionalPaymentInformations.mockCase === "notFound") {
-      return [
-        {
-          description: "closePayment - mock case NOT FOUND",
-          outcome: "KO"
-        },
-        404
-      ];
-    } else if (
-      req.additionalPaymentInformations.mockCase === "unprocessableEntity"
-    ) {
-      return [
-        {
-          description: "closePayment - mock case UNPROCESSABLE ENTITY",
-          outcome: "KO"
-        },
-        422
-      ];
+    const transactionId = req.paymentTokens[0];
+    switch (transactionId) {
+      case "00000000000000000000000000000001":
+        return [
+          {
+            description: "closePayment - mock case Bad request",
+            outcome: "KO"
+          },
+          400
+        ];
+      case "00000000000000000000000000000002":
+        return [
+          {
+            description: "closePayment - mock case Not found",
+            outcome: "KO"
+          },
+          404
+        ];
+      case "00000000000000000000000000000003":
+        return [
+          {
+            description: "closePayment - mock case UNPROCESSABLE ENTITY",
+            outcome: "KO"
+          },
+          422
+        ];
+      case "00000000000000000000000000000004":
+        return [
+          {
+            description: "Node did not receive RPT yet",
+            outcome: "KO"
+          },
+          422
+        ];
+      case "00000000000000000000000000000005":
+        return [
+          {
+            description: "closePayment - mock case Generic error",
+            outcome: "KO"
+          },
+          500
+        ];
+      case "00000000000000000000000000000006":
+        return [
+          {
+            description: "closePayment - long processing response",
+            outcome: "KO"
+          },
+          500,
+          20000
+        ];
+      default:
+        return [
+          {
+            outcome: "OK"
+          },
+          200
+        ];
     }
   }
 
