@@ -115,3 +115,4 @@ Close payment have custom mocks based on payment token used to test different er
 | 00000000000000000000000000000004 | 422             | Node did not receive RPT yet  | 0                                    |
 | 00000000000000000000000000000005 | 500             | Generic error description     | 0                                    |
 | 00000000000000000000000000000006 | 500             | Generic error description     | 20 seconds *(used for timeout tests) |
+| any other value.                 | 200             | outcome KO                    | 0                                    |
