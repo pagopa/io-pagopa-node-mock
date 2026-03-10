@@ -17,6 +17,8 @@ import {
   activateV2PaymenNoticeResponseAllCCP,
   activateV2PaymenNoticeResponseAllCCPlight,
   activateV2PaymenNoticeResponseWithConventionMetadata,
+  activateV2PaymenNoticeResponseWithFixedPaymentToken,
+  MockResponse,
   NodoAttivaRPT,
   NodoVerificaRPT,
   VerifyPaymentNoticeResponse
@@ -268,16 +270,50 @@ export const newExpressApp = async (
         soapRequest["ns2:activatepaymentnoticev2request"][0].qrcode[0]
           .fiscalcode[0];
       logger.info("fiscalCode: ".concat(fiscalCode));
-      if (fiscalCode === "77777777776") {
-        const activatePaymenRes1 = activateV2PaymenNoticeResponseAllCCPlight();
-        return res.status(activatePaymenRes1[0]).send(activatePaymenRes1[1]);
-      } else if (fiscalCode === "77777777775") {
-        const activatePaymenRes2 = activateV2PaymenNoticeResponseAllCCP();
-        return res.status(activatePaymenRes2[0]).send(activatePaymenRes2[1]);
-      } else if (fiscalCode === "77777777774") {
-        const activatePaymenRes3 = activateV2PaymenNoticeResponseWithConventionMetadata();
-        logger.info(activatePaymenRes3);
-        return res.status(activatePaymenRes3[0]).send(activatePaymenRes3[1]);
+      const fiscalCodeToMockResponseMapping = new Map<string, MockResponse>([
+        ["77777777776", activateV2PaymenNoticeResponseAllCCPlight()],
+        ["77777777775", activateV2PaymenNoticeResponseAllCCP()],
+        ["77777777774", activateV2PaymenNoticeResponseWithConventionMetadata()],
+        [
+          "66666666600",
+          activateV2PaymenNoticeResponseWithFixedPaymentToken(
+            "00000000000000000000000000000001"
+          )
+        ],
+        [
+          "66666666601",
+          activateV2PaymenNoticeResponseWithFixedPaymentToken(
+            "00000000000000000000000000000002"
+          )
+        ],
+        [
+          "66666666602",
+          activateV2PaymenNoticeResponseWithFixedPaymentToken(
+            "00000000000000000000000000000003"
+          )
+        ],
+        [
+          "66666666603",
+          activateV2PaymenNoticeResponseWithFixedPaymentToken(
+            "00000000000000000000000000000004"
+          )
+        ],
+        [
+          "66666666604",
+          activateV2PaymenNoticeResponseWithFixedPaymentToken(
+            "00000000000000000000000000000005"
+          )
+        ],
+        [
+          "66666666605",
+          activateV2PaymenNoticeResponseWithFixedPaymentToken(
+            "00000000000000000000000000000006"
+          )
+        ]
+      ]);
+      const mockedResponse = fiscalCodeToMockResponseMapping.get(fiscalCode);
+      if (mockedResponse) {
+        return res.status(mockedResponse[0]).send(mockedResponse[1]);
       }
       const activatePaymenRes = activateV2PaymenNoticeResponse();
       return res.status(activatePaymenRes[0]).send(activatePaymenRes[1]);

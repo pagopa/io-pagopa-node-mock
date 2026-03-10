@@ -83,3 +83,36 @@ and if node mock is running you'll see the following responses :
 </s:Envelope>
 
 ```
+
+## Response Custom mocks
+
+### Activate payment response v2
+
+Activate payment response v2 have custom responses based on input payment notice fiscal code
+
+| fiscal code     | response                                                                           | note                                                                                         |
+|-----------------|------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------| 
+| 77777777776     | OK response with all CCP response without `IBANAPPOGGIO` metadata entry            | used to test all CCP calculation algorithm                                                   | 
+| 77777777775     | OK response with all CCP response with `IBANAPPOGGIO` metadata entry               | used to test all CCP calcultion algorith                                                     |
+| 77777777774     | OK response with convention metadata informations                                  | used to mock a Node response with convention metadata                                        |
+| 66666666600     | OK response with payment token with fixed value `00000000000000000000000000000001` | used to mock a payment flow with an error on close payment (see close payment section below) |
+| 66666666601     | OK response with payment token with fixed value `00000000000000000000000000000002` | used to mock a payment flow with an error on close payment (see close payment section below) |
+| 66666666602     | OK response with payment token with fixed value `00000000000000000000000000000003` | used to mock a payment flow with an error on close payment (see close payment section below) |
+| 66666666603     | OK response with payment token with fixed value `00000000000000000000000000000004` | used to mock a payment flow with an error on close payment (see close payment section below) |
+| 66666666604     | OK response with payment token with fixed value `00000000000000000000000000000005` | used to mock a payment flow with an error on close payment (see close payment section below) |
+| 66666666605     | OK response with payment token with fixed value `00000000000000000000000000000006` | used to mock a payment flow with an error on close payment (see close payment section below) |
+| any other value | OK response                                                                        | used to test an ok payment flow                                                              |
+
+### Close payment
+
+Close payment have custom mocks based on payment token used to test different errors scenario
+
+| payment token value              | http error code | http error description        | response timeout                     |
+|----------------------------------|-----------------|-------------------------------|--------------------------------------|
+| 00000000000000000000000000000001 | 400             | Generic error description     | 0                                    |
+| 00000000000000000000000000000002 | 404             | Generic error description     | 0                                    |
+| 00000000000000000000000000000003 | 422             | Generic error description     | 0                                    |
+| 00000000000000000000000000000004 | 422             | Node did not receive RPT yet  | 0                                    |
+| 00000000000000000000000000000005 | 500             | Generic error description     | 0                                    |
+| 00000000000000000000000000000006 | 500             | Generic error description     | 20 seconds *(used for timeout tests) |
+| any other value.                 | 200             | outcome KO                    | 0                                    |
