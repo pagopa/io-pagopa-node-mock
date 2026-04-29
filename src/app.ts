@@ -18,6 +18,7 @@ import {
   activateV2PaymenNoticeResponseAllCCPlight,
   activateV2PaymenNoticeResponseWithConventionMetadata,
   activateV2PaymenNoticeResponseWithFixedPaymentToken,
+  activateV2PaymenNoticeResponseWithFixedPaymentTokenNoDigitalStamp,
   MockResponse,
   NodoAttivaRPT,
   NodoVerificaRPT,
@@ -288,7 +289,7 @@ export const newExpressApp = async (
         ],
         [
           "66666666602",
-          activateV2PaymenNoticeResponseWithFixedPaymentToken(
+          activateV2PaymenNoticeResponseWithFixedPaymentTokenNoDigitalStamp(
             "00000000000000000000000000000003"
           )
         ],
