@@ -170,7 +170,46 @@ export const activatePaymenNoticeResponse = (): MockResponse => [
  `
 ];
 
-export const activateV2PaymenNoticeResponse = (): MockResponse => [
+export const activateV2PaymentNoticeResponse = (): MockResponse => [
+  200,
+  `<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:common="http://pagopa-api.pagopa.gov.it/xsd/common-types/v1.0.0/" xmlns:nfp="http://pagopa-api.pagopa.gov.it/node/nodeForPsp.xsd">
+    <soapenv:Body>
+        <nfp:activatePaymentNoticeV2Response>
+            <outcome>OK</outcome>
+            <totalAmount>100.00</totalAmount>
+            <paymentDescription>Quota Albo Ordine Giornalisti - ${Math.floor(
+              Math.random() * 99999999999
+            )}</paymentDescription>
+            <fiscalCodePA>77777777777</fiscalCodePA>
+            <companyName>company_${Math.floor(
+              Math.random() * 99999999999
+            )}</companyName>
+            <officeName>office</officeName>
+            <paymentToken>${randomUUID().replace(/-/g, "")}</paymentToken>
+            <transferList>
+                <transfer>
+                    <idTransfer>1</idTransfer>
+                    <transferAmount>50.00</transferAmount>
+                    <fiscalCodePA>77777777777</fiscalCodePA>
+                    <IBAN>IT45R0760103200000000001016</IBAN>
+                    <remittanceInformation>/RFB/00202200000217527/5.00/TXT/</remittanceInformation>
+                    <transferCategory>transferCategoryTest</transferCategory>
+                </transfer>
+                <transfer>
+                    <idTransfer>2</idTransfer>
+                    <transferAmount>50.00</transferAmount>
+                    <fiscalCodePA>77777777777</fiscalCodePA>
+                    <IBAN>IT45R0760103200000000001016</IBAN>
+                    <remittanceInformation>/RFB/00202200000217527/5.00/TXT/</remittanceInformation>
+                </transfer>
+            </transferList>
+            <creditorReferenceId>11137215100062787</creditorReferenceId>
+        </nfp:activatePaymentNoticeV2Response>
+    </soapenv:Body>
+    </soapenv:Envelope>`
+];
+
+export const activateV2PaymentNoticeResponseWithDigitalStamp = (): MockResponse => [
   200,
   `<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:common="http://pagopa-api.pagopa.gov.it/xsd/common-types/v1.0.0/" xmlns:nfp="http://pagopa-api.pagopa.gov.it/node/nodeForPsp.xsd">
     <soapenv:Body>
@@ -405,6 +444,48 @@ export const activateV2PaymenNoticeResponseWithFixedPaymentToken = (
                         <provinciaResidenza>Foggia</provinciaResidenza>
                     </richiestaMarcaDaBollo>
                     <remittanceInformation>/RFB/00202200000217527/5.00/TXT/</remittanceInformation>
+                </transfer>
+            </transferList>
+            <creditorReferenceId>11137215100062787</creditorReferenceId>
+        </nfp:activatePaymentNoticeV2Response>
+    </soapenv:Body>
+    </soapenv:Envelope>`
+];
+
+export const activateV2PaymenNoticeResponseWithFixedPaymentTokenNoDigitalStamp = (
+  paymentToken: string
+): MockResponse => [
+  200,
+  `<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:common="http://pagopa-api.pagopa.gov.it/xsd/common-types/v1.0.0/" xmlns:nfp="http://pagopa-api.pagopa.gov.it/node/nodeForPsp.xsd">
+    <soapenv:Body>
+        <nfp:activatePaymentNoticeV2Response>
+            <outcome>OK</outcome>
+            <totalAmount>100.00</totalAmount>
+            <paymentDescription>Quota Albo Ordine Giornalisti - ${Math.floor(
+              Math.random() * 99999999999
+            )}</paymentDescription>
+            <fiscalCodePA>77777777777</fiscalCodePA>
+            <companyName>company_${Math.floor(
+              Math.random() * 99999999999
+            )}</companyName>
+            <officeName>office</officeName>
+            <paymentToken>${paymentToken}</paymentToken>
+            <transferList>
+                <transfer>
+                    <idTransfer>1</idTransfer>
+                    <transferAmount>50.00</transferAmount>
+                    <fiscalCodePA>77777777777</fiscalCodePA>
+                    <IBAN>IT45R0760103200000000001016</IBAN>
+                    <remittanceInformation>/RFB/00202200000217527/5.00/TXT/</remittanceInformation>
+                    <transferCategory>transferCategoryTest</transferCategory>
+                </transfer>
+                <transfer>
+                    <idTransfer>2</idTransfer>
+                    <transferAmount>50.00</transferAmount>
+                    <fiscalCodePA>77777777777</fiscalCodePA>
+                    <IBAN>IT45R0760103200000000001016</IBAN>
+                    <remittanceInformation>/RFB/00202200000217527/5.00/TXT/</remittanceInformation>
+                    <transferCategory>transferCategoryTest</transferCategory>
                 </transfer>
             </transferList>
             <creditorReferenceId>11137215100062787</creditorReferenceId>

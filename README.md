@@ -18,7 +18,7 @@ if all rights you'll see something like that :
 ## Environment
 
 | name                 | description                   | default            |
-| -------------------- | ----------------------------- | ------------------ |
+|----------------------|-------------------------------|--------------------|
 | WINSTON_LOG_LEVEL    | desired log level             | "debug"            |
 | PAGOPA_NODO_HOST     | host this server listens to   | "http://localhost" |
 | PORT                 | host this server listens to   | 3000               |
@@ -95,13 +95,14 @@ Activate payment response v2 have custom responses based on input payment notice
 | 77777777776     | OK response with all CCP response without `IBANAPPOGGIO` metadata entry            | used to test all CCP calculation algorithm                                                   | 
 | 77777777775     | OK response with all CCP response with `IBANAPPOGGIO` metadata entry               | used to test all CCP calcultion algorith                                                     |
 | 77777777774     | OK response with convention metadata informations                                  | used to mock a Node response with convention metadata                                        |
+| 77777777778     | OK response with a digital stamp (`richiestaMarcaDaBollo`) on the second transfer  | used to mock a digital stamp (marca da bollo) payment flow                                   |
 | 66666666600     | OK response with payment token with fixed value `00000000000000000000000000000001` | used to mock a payment flow with an error on close payment (see close payment section below) |
 | 66666666601     | OK response with payment token with fixed value `00000000000000000000000000000002` | used to mock a payment flow with an error on close payment (see close payment section below) |
 | 66666666602     | OK response with payment token with fixed value `00000000000000000000000000000003` | used to mock a payment flow with an error on close payment (see close payment section below) |
 | 66666666603     | OK response with payment token with fixed value `00000000000000000000000000000004` | used to mock a payment flow with an error on close payment (see close payment section below) |
 | 66666666604     | OK response with payment token with fixed value `00000000000000000000000000000005` | used to mock a payment flow with an error on close payment (see close payment section below) |
 | 66666666605     | OK response with payment token with fixed value `00000000000000000000000000000006` | used to mock a payment flow with an error on close payment (see close payment section below) |
-| any other value | OK response                                                                        | used to test an ok payment flow                                                              |
+| any other value | OK response with IBAN transfers only (no digital stamp)                            | used to test an ok payment flow                                                              |
 
 ### Close payment
 
