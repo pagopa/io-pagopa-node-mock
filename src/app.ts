@@ -13,7 +13,8 @@ import { checkPosition, CheckPositionRequest } from "./fixtures/checkPosition";
 import {
   activateIOPaymenResponse,
   activatePaymenNoticeResponse,
-  activateV2PaymenNoticeResponse,
+  activateV2PaymentNoticeResponse,
+  activateV2PaymentNoticeResponseWithDigitalStamp,
   activateV2PaymenNoticeResponseAllCCP,
   activateV2PaymenNoticeResponseAllCCPlight,
   activateV2PaymenNoticeResponseWithConventionMetadata,
@@ -272,6 +273,7 @@ export const newExpressApp = async (
           .fiscalcode[0];
       logger.info("fiscalCode: ".concat(fiscalCode));
       const fiscalCodeToMockResponseMapping = new Map<string, MockResponse>([
+        ["77777777778", activateV2PaymentNoticeResponseWithDigitalStamp()],
         ["77777777776", activateV2PaymenNoticeResponseAllCCPlight()],
         ["77777777775", activateV2PaymenNoticeResponseAllCCP()],
         ["77777777774", activateV2PaymenNoticeResponseWithConventionMetadata()],
@@ -316,8 +318,8 @@ export const newExpressApp = async (
       if (mockedResponse) {
         return res.status(mockedResponse[0]).send(mockedResponse[1]);
       }
-      const activatePaymenRes = activateV2PaymenNoticeResponse();
-      return res.status(activatePaymenRes[0]).send(activatePaymenRes[1]);
+      const activatePaymentRes = activateV2PaymentNoticeResponse();
+      return res.status(activatePaymentRes[0]).send(activatePaymentRes[1]);
     }
     // The SOAP Request not implemented
     res.status(404).send("Not found");
